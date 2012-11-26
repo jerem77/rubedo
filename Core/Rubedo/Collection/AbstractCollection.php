@@ -121,7 +121,6 @@ abstract class AbstractCollection implements IAbstractCollection
      *
      * @see \Rubedo\Interfaces\IDataAccess::destroy
      * @param array $obj data object
-     * @param bool $safe should we wait for a server response
      * @return array
      */
     public function delete(array $obj) {

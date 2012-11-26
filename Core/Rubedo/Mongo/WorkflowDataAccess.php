@@ -302,5 +302,22 @@ class WorkflowDataAccess extends DataAccess implements IWorkflowDataAccess
 
         return $result;
     }
+	
+	/**
+     * logically delete the objects in the current collection
+     *
+     * @see \Rubedo\Interfaces\IDataAccess::destroy
+     * @param array $obj data object
+     * @return array
+     */
+    public function delete(array $obj){
+		$obj = $this->_inputObjectFilter($obj);
+		var_dump($obj);die();
+		$returnArray = parent::delete($obj);
+		
+		$returnArray['data'] = $this->_outputObjectFilter($returnArray['data']);
+		
+		return $returnArray;
+	}
 
 }
