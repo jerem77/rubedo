@@ -525,7 +525,7 @@ class DataAccess implements IDataAccess
     }
 
     /**
-     * Delete objets in the current collection
+     * Delete objects in the current collection
      *
      * @see \Rubedo\Interfaces\IDataAccess::destroy
      * @param array $obj data object
@@ -556,6 +556,37 @@ class DataAccess implements IDataAccess
 
         } else {
             $returnArray = array('success' => false, "msg" => $resultArray["err"]);
+        }
+        return $returnArray;
+    }
+	
+	/**
+     * logically delete the objects in the current collection
+     *
+     * @see \Rubedo\Interfaces\IDataAccess::destroy
+     * @param array $obj data object
+     * @return array
+     */
+    public function delete(array $obj) {
+        $id = $obj['id'];
+        if (!isset($obj['version'])) {
+            throw new \Rubedo\Exceptions\DataAccess('can\'t delete an object without a version number.');
+        }
+        $version = $obj['version'];
+        $mongoID = $this->getId($id);
+		$obj['deleted'] = 1;
+
+        $updateCondition = array('_id' => $mongoID, 'version' => $version);
+
+        if (is_array($this->_filterArray)) {
+            $updateCondition = array_merge($this->_filterArray, $updateCondition);
+        }
+
+        $resultArray = $this->customUpdate($obj, $updateCondition);
+        if ($resultArray['success']) {
+         	$returnArray = array('success' => true, 'data' => $resultArray['data']);
+        } else {
+            $returnArray = array('success' => false, 'msg' => $resultArray['msg']);
         }
         return $returnArray;
     }

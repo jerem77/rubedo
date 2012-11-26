@@ -2100,40 +2100,20 @@ class DataAccessTest extends PHPUnit_Framework_TestCase {
     }
 	
 	/**
-	 * Test if deleteVacobulary works
-	 * 
-	 * @todo See how to change the current collection
+	 * test the logical delete of an object
 	 */
-	public function testDeleteVocabulary(){
-		/*$dataAccessObject = new \Rubedo\Mongo\DataAccess();
-        $dataAccessObject->init('items', 'Taxonomy');
+	public function testDelete(){
+		$dataAccessObject = new \Rubedo\Mongo\DataAccess();
+        $dataAccessObject->init('items', 'test_db');
 		
-		$item = static::$phactory->create('item', array('version' => 1, 'name' => 'parent'));
+		$item = static::$phactory->create('item', array('version' => 1, 'name' => 'item1'));
         $item['id'] = (string)$item['_id'];
         unset($item['_id']);
 		
-		$item4 = static::$phactory->create('item', array('version' => 1, 'name' => 'parent2'));
-        $item4['id'] = (string)$item4['_id'];
-        unset($item4['_id']);
+		$returnArray = $dataAccessObject->delete($item);
 		
-		$dataAccessObject->init('items', 'TaxonomyTerms');
-		
-		$item2 = static::$phactory->create('item', array('parentId' => $item['id'], 'version' => 1, 'name' => 'child1'));
-        $item2['id'] = (string)$item2['_id'];
-        unset($item2['_id']);
-
-        $item3 = static::$phactory->create('item', array('parentId' => $item['id'], 'version' => 3, 'name' => 'child2'));
-        $item3['id'] = (string)$item3['_id'];
-        unset($item3['_id']);
-		
-		$result = $dataAccessObject->deleteVocabulary($item);
-		
-		$this->assertTrue($result['success']);
-		
-		$expectedResult = array($item4);
-		$readArray = $dataAccessObject->read();
-		
-		$this->assertEquals($expectedResult, $readArray);*/
+		$this->assertTrue($returnArray['success']);
+		$this->assertEquals($returnArray['data']['deleted'], 1);
 	}
 	
 }
