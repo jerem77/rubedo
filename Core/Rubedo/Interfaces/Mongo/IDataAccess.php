@@ -237,5 +237,14 @@ interface IDataAccess {
      * Clear the excludeFieldList array
      */
     public function clearExcludeFieldList();
+	
+	/**
+     * logically delete the objects in the current collection
+     *
+     * @see \Rubedo\Interfaces\IDataAccess::destroy
+     * @param array $obj data object
+     * @return array
+     */
+    public function delete(array $obj);
 
 }

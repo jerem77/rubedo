@@ -117,7 +117,19 @@ abstract class AbstractCollection implements IAbstractCollection
     }
 
     /**
-     * Delete objets in the current collection
+     * Delete objects in the current collection
+     *
+     * @see \Rubedo\Interfaces\IDataAccess::destroy
+     * @param array $obj data object
+     * @param bool $safe should we wait for a server response
+     * @return array
+     */
+    public function delete(array $obj) {
+        return $this->_dataService->delete($obj);
+    }
+	
+	/**
+     * Logically delete the object in the current collection
      *
      * @see \Rubedo\Interfaces\IDataAccess::destroy
      * @param array $obj data object
