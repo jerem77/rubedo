@@ -33,7 +33,7 @@ class WorkflowDataAccess extends DataAccess implements IWorkflowDataAccess
     /**
      * Contain common fields
      */
-    protected $_metaDataFields = array('_id', 'id', 'idLabel', 'typeId', 'createTime', 'createUser', 'lastUpdateTime', 'lastUpdateUser', 'version', 'online', 'text');
+    protected $_metaDataFields = array('_id', 'id', 'idLabel', 'typeId', 'createTime', 'createUser', 'lastUpdateTime', 'lastUpdateUser', 'version', 'online', 'text', 'deleted');
 
     /**
      * Changes the array to obtain workspace and live blocks
