@@ -441,7 +441,6 @@ class DataAccess implements IDataAccess
     public function create(array $obj, $safe = true) {
 
         $obj['version'] = 1;
-		$obj['deleted'] = 0;
 
         $currentUserService = \Rubedo\Services\Manager::getService('CurrentUser');
         $currentUser = $currentUserService->getCurrentUserSummary();

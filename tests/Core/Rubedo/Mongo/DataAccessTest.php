@@ -1580,6 +1580,7 @@ class DataAccessTest extends PHPUnit_Framework_TestCase {
 
         $filterExample = array('name' => 'value');
         $dataAccessObject->addFilter($filterExample);
+		$filterExample = array('name' => 'value', 'deleted' => array('$ne' => 1));
 
         $this->assertEquals($filterExample, $dataAccessObject->getFilterArray());
 
@@ -1594,7 +1595,8 @@ class DataAccessTest extends PHPUnit_Framework_TestCase {
 
         $filterExample = array('name' => 'value');
         $filterExample2 = array('name2' => 'value2');
-        $filters = array_merge($filterExample, $filterExample2);
+		$filter3 = array('deleted' => array('$ne' => 1));
+        $filters = array_merge( $filter3, $filterExample, $filterExample2);
         $dataAccessObject->addFilter($filterExample);
         $dataAccessObject->addFilter($filterExample2);
 

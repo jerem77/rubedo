@@ -181,7 +181,7 @@ class WorkflowDataAccessTest extends PHPUnit_Framework_TestCase {
 		$expectedResult = array(array('id' => $item['id'], 'version' => 1, 'label' => 'test draft 1'));
 		
 		$filter = array('label' => $item['workspace']['label']);
-        $result = $dataAccessObject->addFilter($filter);
+        $dataAccessObject->addFilter($filter);
 
         $readArray = $dataAccessObject->read();
 
