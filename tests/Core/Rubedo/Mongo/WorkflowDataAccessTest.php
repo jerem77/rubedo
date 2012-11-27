@@ -90,10 +90,7 @@ class WorkflowDataAccessTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * test of the read feature
-     *
-     * Create 3 items through Phactory and read them with the service
-     * a version number is added on the fly
+     * test of the read feature in the live
      */
     public function testLiveRead() {
         $dataAccessObject = new \Rubedo\Mongo\WorkflowDataAccess();
@@ -124,10 +121,7 @@ class WorkflowDataAccessTest extends PHPUnit_Framework_TestCase {
     }
 	
 	/**
-     * test of the read feature
-     *
-     * Create 3 items through Phactory and read them with the service
-     * a version number is added on the fly
+     * test of the read feature in the workspace
      */
     public function testWorkspaceRead() {
         $dataAccessObject = new \Rubedo\Mongo\WorkflowDataAccess();
@@ -158,8 +152,7 @@ class WorkflowDataAccessTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * test of the read feature
-     *	Case with a simple filter
+     * test of the read feature with a filter
      */
     public function testReadWithFilterWithUncommonFields() {
         $dataAccessObject = new \Rubedo\Mongo\WorkflowDataAccess();
@@ -189,8 +182,40 @@ class WorkflowDataAccessTest extends PHPUnit_Framework_TestCase {
     }
 
 	/**
-     * test of the read feature
-     *	Case with a simple filter
+     * test of the read feature with two filters
+     */
+    public function testReadWithTwoFilters() {
+        $dataAccessObject = new \Rubedo\Mongo\WorkflowDataAccess();
+        $dataAccessObject->init('items', 'test_db');
+		$dataAccessObject->setWorkspace();
+
+        $fieldsLive1 = static::$phactory->build('fields',array('label'=>'test live 1'));
+		$fieldsDraft1 = static::$phactory->build('fields',array('label'=>'test draft 1'));
+        $item = static::$phactory->createWithAssociations('item', array('live'=>$fieldsLive1,'workspace'=>$fieldsDraft1));
+		$item['id'] = (string)$item['_id'];
+        unset($item['_id']);
+		
+		$fieldsLive2 = static::$phactory->build('fields',array('label'=>'test live 2'));
+		$fieldsDraft2 = static::$phactory->build('fields',array('label'=>'test draft 2'));
+		$item2 = static::$phactory->createWithAssociations('item', array('live'=>$fieldsLive2,'workspace'=>$fieldsDraft2));
+		$item2['id'] = (string)$item2['_id'];
+        unset($item2['_id']);
+		
+		$expectedResult = array(array('id' => $item['id'], 'version' => 1, 'label' => 'test draft 1'));
+		
+		$filter = array('label' => $item['workspace']['label']);
+        $dataAccessObject->addFilter($filter);
+		
+		$filter = array('id' => $item['id']);
+        $dataAccessObject->addFilter($filter);
+
+        $readArray = $dataAccessObject->read();
+
+        $this->assertEquals($expectedResult, $readArray);
+    }
+
+	/**
+     * test of the read feature with filter
      */
     public function testReadWithFilterWithCommonFields() {
         $dataAccessObject = new \Rubedo\Mongo\WorkflowDataAccess();
