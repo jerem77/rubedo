@@ -153,37 +153,5 @@ abstract class WorkflowAbstractCollection extends AbstractCollection
 		return $returnArray;
     }
 	
-	public function delete($obj, $workspace = false){
-		$id = $obj['id'];
-        if (!isset($obj['version'])) {
-            throw new \Rubedo\Exceptions\DataAccess('can\'t delete an object without a version number.');
-        }
-        $version = $obj['version'];
-        $mongoID = $this->_dataService->getId($id);
-		if($workspace){
-			if(isset($obj['workspace'])){
-				$obj['workspace']['deleted'] = 1;
-			} else {
-				throw new \Rubedo\Exceptions\DataAccess('can\'t delete an object without a workspace.');
-			}
-		} else {
-			$obj['deleted'] = 1;
-		}
-
-        $updateCondition = array('_id' => $mongoID, 'version' => $version);
-
-        if (is_array($this->_dataService->getFilterArray())) {
-            $updateCondition = array_merge($this->_dataService->getFilterArray(), $updateCondition);
-        }
-
-        $resultArray = $this->_dataService->customUpdate($obj, $updateCondition);
-		
-        if ($resultArray['success']) {
-         	$returnArray = array('success' => true, 'data' => $resultArray['data']);
-        } else {
-            $returnArray = array('success' => false, 'msg' => $resultArray['msg']);
-        }
-        return $returnArray;
-	}
 
 }

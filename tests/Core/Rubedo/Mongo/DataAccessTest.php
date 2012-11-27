@@ -2115,7 +2115,7 @@ class DataAccessTest extends PHPUnit_Framework_TestCase {
 		$returnArray = $dataAccessObject->delete($item);
 		
 		$this->assertTrue($returnArray['success']);
-		$this->assertEquals($returnArray['data']['deleted'], 1);
+		$this->assertEquals($returnArray['data']['$set']['deleted'], 1);
 	}
 	
 }

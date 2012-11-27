@@ -252,7 +252,7 @@ class WorkflowDataAccess extends DataAccess implements IWorkflowDataAccess
      *
      * @return bool
      */
-    public function update(array $obj, $safe = true) {
+    public function update(array $obj, $safe = true) {		
         $obj = $this->_inputObjectFilter($obj);
 
         $result = parent::update($obj, $safe);
@@ -309,11 +309,7 @@ class WorkflowDataAccess extends DataAccess implements IWorkflowDataAccess
      * @return array
      */
     public function delete(array $obj){
-		$obj = $this->_inputObjectFilter($obj);
-		var_dump($obj);die();
 		$returnArray = parent::delete($obj);
-		
-		$returnArray['data'] = $this->_outputObjectFilter($returnArray['data']);
 		
 		return $returnArray;
 	}

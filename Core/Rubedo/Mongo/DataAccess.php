@@ -582,8 +582,14 @@ class DataAccess implements IDataAccess
             throw new \Rubedo\Exceptions\DataAccess('can\'t delete an object without a version number.');
         }
         $version = $obj['version'];
+		$newVersion = $version+1;
         $mongoID = $this->getId($id);
-		$obj['deleted'] = 1;
+		
+		$currentUserService = \Rubedo\Services\Manager::getService('CurrentUser');
+        $currentUser = $currentUserService->getCurrentUserSummary();
+
+        $currentTimeService = \Rubedo\Services\Manager::getService('CurrentTime');
+        $currentTime = $currentTimeService->getCurrentTime();
 
         $updateCondition = array('_id' => $mongoID, 'version' => $version);
 
@@ -591,7 +597,8 @@ class DataAccess implements IDataAccess
             $updateCondition = array_merge($this->_filterArray, $updateCondition);
         }
 
-        $resultArray = $this->customUpdate($obj, $updateCondition);
+        $resultArray = $this->customUpdate(array('$set' => array('deleted' => 1, 'version' => $newVersion, 'lastUpdateUser' => $currentUser, 'lastUpdateTime' => $currentTime)), $updateCondition);
+		
         if ($resultArray['success']) {
          	$returnArray = array('success' => true, 'data' => $resultArray['data']);
         } else {
@@ -1014,9 +1021,7 @@ class DataAccess implements IDataAccess
      * @return array
      */
     public function customUpdate(array $data, array $updateCond, $safe = true) {
-
         $resultArray = $this->_collection->update($updateCond, $data, array("safe" => $safe));
-
         if ($resultArray['ok'] == 1) {
             if ($resultArray['updatedExisting'] == true) {
                 $returnArray = array('success' => true, "data" => $data);
