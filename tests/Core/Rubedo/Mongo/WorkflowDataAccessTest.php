@@ -293,9 +293,9 @@ class WorkflowDataAccessTest extends PHPUnit_Framework_TestCase {
 		$item2['id'] = (string)$item2['_id'];
         unset($item2['_id']);
 		
-		$expectedResult = array(array('id' => $item['id'], 'version' => 1, 'label' => 'b'), array('id' => $item2['id'], 'version' => 1, 'label' => 'a'));
+		$expectedResult = array(array('id' => $item2['id'], 'version' => 1, 'label' => 'a'), array('id' => $item['id'], 'version' => 1, 'label' => 'b'));
 
-        $dataAccessObject->addSort(array('id' => 'asc'));
+        $dataAccessObject->addSort(array('id' => 'desc'));
 
         $readArray = $dataAccessObject->read();
 
@@ -328,10 +328,10 @@ class WorkflowDataAccessTest extends PHPUnit_Framework_TestCase {
 		$item3['id'] = (string)$item3['_id'];
         unset($item3['_id']);
 		
-		$expectedResult = array(array('id' => $item3['id'], 'version' => 1, 'label' => 'test live', 'name'=>'test 2'), array('id' => $item['id'], 'version' => 1, 'label' => 'test live', 'name'=>'test'), array('id' => $item2['id'], 'version' => 1, 'label' => 'test live', 'name'=>'test'));
+		$expectedResult = array(array('id' => $item3['id'], 'version' => 1, 'label' => 'test live', 'name'=>'test 2'), array('id' => $item2['id'], 'version' => 1, 'label' => 'test live', 'name'=>'test'), array('id' => $item['id'], 'version' => 1, 'label' => 'test live', 'name'=>'test'));
 
 		$dataAccessObject->addSort(array('name' => 'desc'));
-        $dataAccessObject->addSort(array('id' => 'asc'));
+        $dataAccessObject->addSort(array('id' => 'desc'));
 
         $readArray = $dataAccessObject->read();
 
