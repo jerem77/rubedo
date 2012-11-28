@@ -339,6 +339,31 @@ class WorkflowDataAccessTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * Try to read with a sort by _id
+	 */
+	public function testReadWithSortById(){
+		$dataAccessObject = new \Rubedo\Mongo\WorkflowDataAccess();
+        $dataAccessObject->init('items', 'test_db');
+		$dataAccessObject->setLive();
+
+        $fieldsLive1 = static::$phactory->build('fields',array('label'=>'test live', 'name' => 'test 1'));
+		$fieldsDraft1 = static::$phactory->build('fields',array('label'=>'test draft', 'name' => 'test 1'));
+        $item = static::$phactory->createWithAssociations('item', array('live'=>$fieldsLive1,'workspace'=>$fieldsDraft1));
+		
+		$fieldsLive2 = static::$phactory->build('fields',array('label'=>'test live', 'name' => 'test 2'));
+		$fieldsDraft2 = static::$phactory->build('fields',array('label'=>'test draft', 'name' => 'test 2'));
+		$item2 = static::$phactory->createWithAssociations('item', array('live'=>$fieldsLive2,'workspace'=>$fieldsDraft2));
+		
+		$expectedResult = array(array('id' => (string)$item2['_id'], 'version' => 1, 'label' => 'test live', 'name'=>'test 2'), array('id' => (string)$item['_id'], 'version' => 1, 'label' => 'test live', 'name'=>'test 1'));
+
+        $dataAccessObject->addSort(array('_id' => 'desc'));
+
+        $readArray = $dataAccessObject->read();
+
+        $this->assertEquals($expectedResult, $readArray);
+	}	
+
+	/**
      * test if read function works fine with imposed fields
      *
      * The result doesn't contain the password and first name field

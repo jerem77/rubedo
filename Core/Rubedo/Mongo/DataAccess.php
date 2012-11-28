@@ -23,8 +23,7 @@ use Rubedo\Interfaces\Mongo\IDataAccess;
  * @category Rubedo
  * @package Rubedo
  */
-class DataAccess implements IDataAccess
-{
+class DataAccess implements IDataAccess {
 
     /**
      * Default value of the connection string
@@ -196,10 +195,10 @@ class DataAccess implements IDataAccess
         $excludedFields = $this->getExcludeFieldList();
 
         //merge the two fields array to obtain only one array with all the conditions
-        if(!empty($includedFields) && !empty($excludedFields)){
-        	$fieldRule = $includedFields;
+        if (!empty($includedFields) && !empty($excludedFields)) {
+            $fieldRule = $includedFields;
         } else {
-        	$fieldRule = array_merge($includedFields, $excludedFields);
+            $fieldRule = array_merge($includedFields, $excludedFields);
         }
 
         //get the cursor
@@ -359,12 +358,12 @@ class DataAccess implements IDataAccess
         $excludedFields = $this->getExcludeFieldList();
 
         //merge the two fields array to obtain only one array with all the conditions
-        if(!empty($includedFields) && !empty($excludedFields)){
-        	$fieldRule = $includedFields;
+        if (!empty($includedFields) && !empty($excludedFields)) {
+            $fieldRule = $includedFields;
         } else {
-        	$fieldRule = array_merge($includedFields, $excludedFields);
+            $fieldRule = array_merge($includedFields, $excludedFields);
         }
-        
+
         //get the cursor
         if (empty($filter)) {
             $cursor = $this->_collection->find(array('parentId' => $parentId), $fieldRule);
@@ -407,10 +406,10 @@ class DataAccess implements IDataAccess
         $excludedFields = $this->getExcludeFieldList();
 
         //merge the two fields array to obtain only one array with all the conditions
-        if(!empty($includedFields) && !empty($excludedFields)){
-        	$fieldRule = $includedFields;
+        if (!empty($includedFields) && !empty($excludedFields)) {
+            $fieldRule = $includedFields;
         } else {
-        	$fieldRule = array_merge($includedFields, $excludedFields);
+            $fieldRule = array_merge($includedFields, $excludedFields);
         }
 
         $data = $this->_collection->findOne($value, $fieldRule);
@@ -429,13 +428,13 @@ class DataAccess implements IDataAccess
     public function findById($contentId) {
         return $this->findOne(array('_id' => $this->getId($contentId)));
     }
-    
+
     /**
      * Find an item given by its name (find only one if many)
      * @param string $name
      * @return array
      */
-    public function findByName($name){
+    public function findByName($name) {
         return $this->findOne(array('text' => $name));
     }
 
@@ -568,8 +567,8 @@ class DataAccess implements IDataAccess
         }
         return $returnArray;
     }
-	
-	/**
+
+    /**
      * logically delete the objects in the current collection
      *
      * @see \Rubedo\Interfaces\IDataAccess::destroy
@@ -582,10 +581,10 @@ class DataAccess implements IDataAccess
             throw new \Rubedo\Exceptions\DataAccess('can\'t delete an object without a version number.');
         }
         $version = $obj['version'];
-		$newVersion = $version+1;
+        $newVersion = $version + 1;
         $mongoID = $this->getId($id);
-		
-		$currentUserService = \Rubedo\Services\Manager::getService('CurrentUser');
+
+        $currentUserService = \Rubedo\Services\Manager::getService('CurrentUser');
         $currentUser = $currentUserService->getCurrentUserSummary();
 
         $currentTimeService = \Rubedo\Services\Manager::getService('CurrentTime');
@@ -598,9 +597,9 @@ class DataAccess implements IDataAccess
         }
 
         $resultArray = $this->customUpdate(array('$set' => array('deleted' => 1, 'version' => $newVersion, 'lastUpdateUser' => $currentUser, 'lastUpdateTime' => $currentTime)), $updateCondition);
-		
+
         if ($resultArray['success']) {
-         	$returnArray = array('success' => true, 'data' => $resultArray['data']);
+            $returnArray = array('success' => true, 'data' => $resultArray['data']);
         } else {
             $returnArray = array('success' => false, 'msg' => $resultArray['msg']);
         }
@@ -788,6 +787,7 @@ class DataAccess implements IDataAccess
      * @param array $sort Native Mongo syntax sort array
      */
     public function addSort(array $sort) {
+
         //check valid input
         if (count($sort) !== 1) {
             throw new \Rubedo\Exceptions\DataAccess("Invalid sort array", 1);
@@ -795,6 +795,9 @@ class DataAccess implements IDataAccess
         }
 
         foreach ($sort as $name => $value) {
+            if ($name == 'id') {
+                $name = '_id';
+            }
             if (!in_array(gettype($value), array('array', 'string', 'float', 'integer'))) {
                 throw new \Rubedo\Exceptions\DataAccess("Invalid sort array", 1);
             }
@@ -1041,9 +1044,9 @@ class DataAccess implements IDataAccess
         $cursor = $this->_collection->find($filter, $fieldRule);
         return $cursor;
     }
-	
-	public function customDelete($deleteCond,$safe=true){
-		return $this->_collection->remove($deleteCond,array('safe'=>$safe));
-	}
+
+    public function customDelete($deleteCond, $safe = true) {
+        return $this->_collection->remove($deleteCond, array('safe' => $safe));
+    }
 
 }
