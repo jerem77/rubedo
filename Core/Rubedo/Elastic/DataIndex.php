@@ -1,16 +1,18 @@
 <?php
 /**
- * Rubedo
+ * Rubedo -- ECM solution
+ * Copyright (c) 2012, WebTales (http://www.webtales.fr/).
+ * All rights reserved.
+ * licensing@webtales.fr
  *
- * LICENSE
+ * Open Source License
+ * ------------------------------------------------------------------------------------------
+ * Rubedo is licensed under the terms of the Open Source GPL 3.0 license. 
  *
- * yet to be written
- *
- * @category Rubedo
- * @package Rubedo
- * @copyright Copyright (c) 2012-2012 WebTales (http://www.webtales.fr)
- * @license yet to be written
- * @version $Id$
+ * @category   Rubedo
+ * @package    Rubedo
+ * @copyright  Copyright (c) 2012-2012 WebTales (http://www.webtales.fr)
+ * @license    http://www.gnu.org/licenses/gpl.html Open Source GPL 3.0 license
  */
 namespace Rubedo\Elastic;
 
@@ -35,26 +37,22 @@ class DataIndex extends DataAbstract implements IDataIndex
     public function getTypeStructure ($id) {
     	
 		$returnArray=array();
-		$searchableFields=array('lastUpdateTime','text','type','author');
+		$searchableFields=array('lastUpdateTime','text','summary','type','author');
     	
 		// Get content type config by id
 		$c = new \Rubedo\Mongo\DataAccess();
 		$c->init("ContentTypes");
 		$contentTypeConfig = $c->findById($id);
 
-		// Search abstract field
-		$abstract="";
+		// Search summary field
+		$summary="";
 		$fields=$contentTypeConfig["fields"];
 		foreach($fields as $field) {
-			if ($field['config']['resumed']) {
-				$abstract = $field['config']['name'];
-			}
 			if ($field['config']['searchable']) {
 				$searchableFields[] = $field['config']['name'];
 			}	
 		}    
 		
-		$returnArray['abstract']=$abstract;
 		$returnArray['searchableFields']=$searchableFields;
 		return $returnArray;	
     }
@@ -89,18 +87,13 @@ class DataIndex extends DataAbstract implements IDataIndex
 		if (is_array($data["fields"])) {
 
 			foreach($data["fields"] as $key => $field) {
-				
+						
 				// Only searchable fields get indexed
 				if ($field['config']['searchable']) {
 					
 					$name = $field['config']['fieldLabel'];
-					
-					if ($field['config']['resumed']) {
-						$store = 'yes';
-						$name = 'abstract';
-					} else {
-						$store = 'no';
-					}				
+					$store = "no";
+								
 					switch($field['cType']) {
 						case 'checkbox' :
 							$indexMapping[$name] = array('type' => 'string', 'store' => $store);
@@ -155,8 +148,10 @@ class DataIndex extends DataAbstract implements IDataIndex
 		// Add systems metadata : TODO update model text to title	
 		$indexMapping["lastUpdateTime"] = array('type' => 'date', 'store' => 'yes');
 		$indexMapping["text"] = array('type' => 'string', 'store' => 'yes');
+		$indexMapping["summary"] = array('type' => 'string', 'store' => 'yes');
 		$indexMapping["author"] = array('type' => 'string', 'index'=> 'not_analyzed', 'store' => 'yes');
 		$indexMapping["contentType"] = array('type' => 'string', 'index'=> 'not_analyzed', 'store' => 'yes');
+		$indexMapping["taxonomy.Tags"] = array('type' => 'string', 'index'=> 'not_analyzed', 'store' => 'no');
 		
 		// If there is no searchable field, the new type is not created
 		if (!empty($indexMapping)) {
@@ -191,20 +186,22 @@ class DataIndex extends DataAbstract implements IDataIndex
      * Create or update index for existing content
      *    
 	 * @see \Rubedo\Interfaces\IDataIndex::indexContent()
-	 * @param string $id new content id
-	 * @param string $typeId new content type id
-	 * @param array $data new content data
+	 * @param string $id content id
+	 * @param boolean $live live if true, workspace if live
      * @return array
      */
-    public function indexContent ($id, $typeId = null, $data = null) {
+	public function indexContent ($id, $live = false) {
 
-		// retrieve type id and content data if null
-		if (is_null($typeId)) {
-			$c = \Rubedo\Services\Manager::getService('MongoDataAccess');
-			$c->init("Contents");	
-			$data = $c->findById($id);
-			$typeId = $data['typeId'];
-		}
+	     // content data to index
+	     if ($live) {
+	            $space = "live";
+	     } else {
+	            $space = "workspace";
+	     }
+            
+            // retrieve type id and content data if null
+        $data = \Rubedo\Services\Manager::getService('Contents')->findById($id);
+        $typeId = $data['typeId'];
 		
 		// Retrieve type label
 		$ct = \Rubedo\Services\Manager::getService('MongoDataAccess');
@@ -221,17 +218,13 @@ class DataIndex extends DataAbstract implements IDataIndex
 	
 		// Add fields to index	
 		$contentData = array();
-		foreach($data['workspace']['fields'] as $field => $var) {
+		foreach($data[$space]['fields'] as $field => $var) {
 
-			// Add abstract if exists
-			if ($field==$typeStructure['abstract']) {
-				$contentData["abstract"] = (string) $var;
-			} else {
-				// only index searchable fields
-				if (in_array($field,$typeStructure['searchableFields']))  {	
-					$contentData[$field] = (string) $var;
-				}
+			// only index searchable fields
+			if (in_array($field,$typeStructure['searchableFields']))  {	
+				$contentData[$field] = (string) $var;
 			}
+
 			// Date format fix
 			if ($field=="lastUpdateTime") $contentData[$field] = date("Y-m-d", (int) $var);
 		}
@@ -244,7 +237,7 @@ class DataIndex extends DataAbstract implements IDataIndex
 			$contentData['lastUpdateTime'] = 0;
 		}
 		if (isset($data['status'])) {
-			$contentData['status'] = (string) $data['workspace']['status'];
+			$contentData['status'] = (string) $data[$space]['status'];
 		} else {
 			$contentData['status'] = "unknown";
 		}
@@ -253,8 +246,18 @@ class DataIndex extends DataAbstract implements IDataIndex
 		} else {
 			$contentData['author'] = "unknown";
 		}
+        
+        // Add taxonomy
+         if (isset($data[$space]["taxonomy"])) {
+                $tt = \Rubedo\Services\Manager::getService('TaxonomyTerms');
+                foreach ($data[$space]["taxonomy"] as $vocabulary => $terms) {
+					$collection = \Rubedo\Services\Manager::getService('MongoDataAccess');
+					$collection->init("Taxonomy");
+					$taxonomy = $collection->findById($vocabulary);				
+                    foreach ($terms as $term) $contentData['taxonomy'][$taxonomy['name']][] = $tt->getTerm($term);
+                }
+         }
 
-		//print_r($contentData);
 		$currentDocument = new \Elastica_Document($id, $contentData);
 		
 		if (isset($contentData['attachment']) && $contentData['attachment'] != '') {
@@ -316,9 +319,9 @@ class DataIndex extends DataAbstract implements IDataIndex
 		$result = array();
 		
 		// Destroy and re-create content and document index
-		$this->_content_index->delete();
+		@$this->_content_index->delete();
 		$this->_content_index->create(self::$_content_index_param,true);
-		$this->_document_index->delete();
+		@$this->_document_index->delete();
 		$this->_document_index->create(self::$_document_index_param,true);	
 			
 		// Retreive all content types
@@ -341,7 +344,6 @@ class DataIndex extends DataAbstract implements IDataIndex
 				$contentCount++;
 			}
 			$result[$contentType["type"]]=$contentCount;
-			
 		}
 		return($result);
 

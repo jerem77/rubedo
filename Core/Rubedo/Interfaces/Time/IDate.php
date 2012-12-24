@@ -7,7 +7,7 @@
  *
  * Open Source License
  * ------------------------------------------------------------------------------------------
- * Rubedo is licensed under the terms of the Open Source GPL 3.0 license. 
+ * Rubedo is licensed under the terms of the Open Source GPL 3.0 license.
  *
  * @category   Rubedo
  * @package    Rubedo
@@ -15,27 +15,24 @@
  * @license    http://www.gnu.org/licenses/gpl.html Open Source GPL 3.0 license
  */
 
-require_once('DataAccessController.php');
- 
+namespace Rubedo\Interfaces\Time;
+
 /**
- * Controller providing CRUD API for the masks JSON
+ * Date Service
  *
- * Receveive Ajax Calls for read & write from the UI to the Mongo DB
- *
+ * 
  *
  * @author jbourdin
  * @category Rubedo
  * @package Rubedo
- *
  */
-class Backoffice_MasksController extends Backoffice_DataAccessController
+interface IDate
 {
+	/**
+	 * Convert to timestamp
+	 * 
+	 * @return string timestamp format datetime (number of second since unix dawn of time)
+	 */
+    public function convertToTimeStamp($dateString,$format=null);
 	
-	public function init(){
-		parent::init();
-		
-		// init the data access service
-		$this -> _dataService = Rubedo\Services\Manager::getService('Masks');
-	}
-
 }

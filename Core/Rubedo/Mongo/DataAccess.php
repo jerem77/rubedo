@@ -1,16 +1,18 @@
 <?php
 /**
- * Rubedo
+ * Rubedo -- ECM solution
+ * Copyright (c) 2012, WebTales (http://www.webtales.fr/).
+ * All rights reserved.
+ * licensing@webtales.fr
  *
- * LICENSE
+ * Open Source License
+ * ------------------------------------------------------------------------------------------
+ * Rubedo is licensed under the terms of the Open Source GPL 3.0 license. 
  *
- * yet to be written
- *
- * @category Rubedo
- * @package Rubedo
- * @copyright Copyright (c) 2012-2012 WebTales (http://www.webtales.fr)
- * @license yet to be written
- * @version $Id$
+ * @category   Rubedo
+ * @package    Rubedo
+ * @copyright  Copyright (c) 2012-2012 WebTales (http://www.webtales.fr)
+ * @license    http://www.gnu.org/licenses/gpl.html Open Source GPL 3.0 license
  */
 namespace Rubedo\Mongo;
 
@@ -474,20 +476,7 @@ class DataAccess implements IDataAccess
         } else {
             $returnArray = array('success' => false, "msg" => $resultArray["err"]);
         }
-        /*
-         // if it is a content type creation, get it created as a ES collection
-         if ($this->_collection->getName()=="ContentTypes") {
-         $ElasticDataIndexService = \Rubedo\Services\Manager::getService('ElasticDataIndex');
-         $ElasticDataIndexService->init();
-         $ElasticDataIndexService->createContentType ($obj['id'], $obj,TRUE);
-         }
-         */
-        // if it is a content creation, get it updated as a ES collection
-        if ($this->_collection->getName() == "Contents" and $returnArray["success"]) {
-            $ElasticDataIndexService = \Rubedo\Services\Manager::getService('ElasticDataIndex');
-            $ElasticDataIndexService->init();
-            $ElasticDataIndexService->indexContent($obj['id'], $obj['typeId'], $obj);
-        }
+
         return $returnArray;
     }
 
@@ -533,11 +522,16 @@ class DataAccess implements IDataAccess
         }
 
         $resultArray = $this->_collection->update($updateCondition, array('$set' => $obj), array("safe" => $safe));
-
+	
+	$obj=$this->findById($mongoID);
+	
         if ($resultArray['ok'] == 1) {
             if ($resultArray['updatedExisting'] == true) {
                 $obj['id'] = $id;
                 unset($obj['_id']);
+		
+		
+																
                 $returnArray = array('success' => true, "data" => $obj);
             } else {
                 $returnArray = array('success' => false, "msg" => 'no record had been updated');
@@ -545,20 +539,7 @@ class DataAccess implements IDataAccess
 
         } else {
             $returnArray = array('success' => false, "msg" => $resultArray["err"]);
-        }
-
-        // if it is a content type update, get it updated as a ES collection
-        if ($this->_collection->getName() == "ContentTypes" and $returnArray["success"]) {
-            $ElasticDataIndexService = \Rubedo\Services\Manager::getService('ElasticDataIndex');
-            $ElasticDataIndexService->init();
-            $ElasticDataIndexService->indexContentType($obj['id'], $obj, TRUE);
-        }
-        // if it is a content update, get it updated as a ES collection
-        if ($this->_collection->getName() == "Contents" and $returnArray["success"]) {
-            $ElasticDataIndexService = \Rubedo\Services\Manager::getService('ElasticDataIndex');
-            $ElasticDataIndexService->init();
-            $ElasticDataIndexService->indexContent($obj['id'], $obj['typeId'], $obj);
-        }
+        }							
 
         return $returnArray;
     }
@@ -596,18 +577,7 @@ class DataAccess implements IDataAccess
         } else {
             $returnArray = array('success' => false, "msg" => $resultArray["err"]);
         }
-        // if it is a content type destroy, delete the ES type
-        if ($this->_collection->getName() == "ContentTypes" and $returnArray["success"]) {
-            $ElasticDataIndexService = \Rubedo\Services\Manager::getService('ElasticDataIndex');
-            $ElasticDataIndexService->init();
-            $ElasticDataIndexService->deleteContentType($obj['id'], TRUE);
-        }
-        // if it is a content destroy, delete the ES document
-        if ($this->_collection->getName() == "Contents" and $returnArray["success"]) {
-            $ElasticDataIndexService = \Rubedo\Services\Manager::getService('ElasticDataIndex');
-            $ElasticDataIndexService->init();
-            $ElasticDataIndexService->deleteContent($obj['typeId'], $obj['id'], TRUE);
-        }
+
         return $returnArray;
     }
 
@@ -700,6 +670,7 @@ class DataAccess implements IDataAccess
      */
     public function addFilter(array $filter) {
         //check valid input
+        
         if (count($filter) !== 1) {
             throw new \Rubedo\Exceptions\DataAccess("Invalid filter array", 1);
         }
@@ -709,8 +680,7 @@ class DataAccess implements IDataAccess
                 throw new \Rubedo\Exceptions\DataAccess("Invalid filter array", 1);
             }
             if (is_array($value) && count($value) !== 1) {
-                throw new \Rubedo\Exceptions\DataAccess("Invalid filter array", 1);
-
+		throw new \Rubedo\Exceptions\DataAccess("Invalid filter array", 1);
             }
             if (is_array($value)) {
                 foreach ($value as $operator => $subvalue) {

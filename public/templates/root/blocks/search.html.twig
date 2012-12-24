@@ -61,7 +61,7 @@
 			<i class="icon-search"></i> {{"full_text_search"|trans}}
 		</p>
 			<form class="form-search" action="{{url({},true)}}">
-				<input type="text" class="input-medium search-query" name="query" size="10" value=" {{ searchTerms }}" placeholder=" {{"search"|trans}}">
+				<input type="text" class="input-medium search-query" name="query" size="10" value="{{ searchTerms }}" placeholder="{{"search"|trans}}">
 			</form>
 		<p>
 			<i class="icon-file"></i> {{"content_type"|trans}}
@@ -93,6 +93,22 @@
 		{% else %}
 		<p style="padding-left: 20px">
 			{{author}} <a href="{{url({'author': null})}}"><i class="icon-remove-sign"></i></a>
+		</p>
+		{% endif %}
+		<p>
+			<i class="icon-tags"></i> {{"Tags"|trans}}
+		</p>
+		{% if (taxonomy == '') %}
+		<ul>
+			{% for facet in taxonomyFacets %}
+			<li>
+				<a href="{{url({'taxonomy': facet.term})}}">{{ facet.term }} ({{ facet.count }})</a>
+			</li>
+			{% endfor %}
+		</ul>
+		{% else %}
+		<p style="padding-left: 20px">
+			{{taxonomy}} <a href="{{url({'taxonomy': null})}}"><i class="icon-remove-sign"></i></a>
 		</p>
 		{% endif %}
 		<p>
@@ -129,6 +145,10 @@
 					</div>
 				</div> &nbsp;<span class="label">{{ result.type }}</span>
 				<br />
+				<br />
+				{% if result.summary %}
+				<p>{{ result.summary }}</p>
+				{% endif %}
 				<br />
 				{{"published_by"|trans}} <a href="#">{{ result.author }}</a> {{"on"|trans}} {{ (result.lastUpdateTime)|localizeddate('long', 'none', lang) }}. </td>
 			</tr>

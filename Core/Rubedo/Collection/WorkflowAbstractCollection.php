@@ -1,16 +1,18 @@
 <?php
 /**
- * Rubedo
+ * Rubedo -- ECM solution
+ * Copyright (c) 2012, WebTales (http://www.webtales.fr/).
+ * All rights reserved.
+ * licensing@webtales.fr
  *
- * LICENSE
+ * Open Source License
+ * ------------------------------------------------------------------------------------------
+ * Rubedo is licensed under the terms of the Open Source GPL 3.0 license. 
  *
- * yet to be written
- *
- * @category Rubedo
- * @package Rubedo
- * @copyright Copyright (c) 2012-2012 WebTales (http://www.webtales.fr)
- * @license yet to be written
- * @version $Id$
+ * @category   Rubedo
+ * @package    Rubedo
+ * @copyright  Copyright (c) 2012-2012 WebTales (http://www.webtales.fr)
+ * @license    http://www.gnu.org/licenses/gpl.html Open Source GPL 3.0 license
  */
 namespace Rubedo\Collection;
 
@@ -114,13 +116,9 @@ abstract class WorkflowAbstractCollection extends AbstractCollection
 		
 		return $returnArray;
     }
-	
-	/**
-     * Do a find request on the current collection
-     *
-	 * @param array $filters filter the list with mongo syntax
-	 * @param array $sort sort the list with mongo syntax
-     * @return array
+    
+    /* (non-PHPdoc)
+     * @see \Rubedo\Collection\AbstractCollection::getList()
      */
     public function getList($filters = null, $sort = null, $start = null, $limit = null, $live = true) {
     	if($live === true){

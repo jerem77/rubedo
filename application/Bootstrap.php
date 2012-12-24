@@ -1,17 +1,19 @@
 <?php
 
 /**
- * Rubedo
+ * Rubedo -- ECM solution
+ * Copyright (c) 2012, WebTales (http://www.webtales.fr/).
+ * All rights reserved.
+ * licensing@webtales.fr
  *
- * LICENSE
+ * Open Source License
+ * ------------------------------------------------------------------------------------------
+ * Rubedo is licensed under the terms of the Open Source GPL 3.0 license. 
  *
- * yet to be written
- *
- * @category Rubedo
- * @package Rubedo
- * @copyright Copyright (c) 2012-2012 WebTales (http://www.webtales.fr)
- * @license yet to be written
- * @version $Id$
+ * @category   Rubedo
+ * @package    Rubedo
+ * @copyright  Copyright (c) 2012-2012 WebTales (http://www.webtales.fr)
+ * @license    http://www.gnu.org/licenses/gpl.html Open Source GPL 3.0 license
  */
 
 
@@ -51,6 +53,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         if (isset($options)) {
 			Rubedo\Elastic\DataAbstract::setOptions($options['elastic']);
         }
+        $indexContentOptionsJson = file_get_contents(APPLICATION_PATH.'/configs/elastica.json');
+        $indexContentOptions = Zend_Json::decode($indexContentOptionsJson);
+        Rubedo\Elastic\DataAbstract::setContentIndexOption($indexContentOptions);
     }
 
 	/**
