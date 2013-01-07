@@ -87,7 +87,7 @@ class ContentsTest extends PHPUnit_Framework_TestCase {
 						"text" => "test");
 		
 		$contents = new \Rubedo\Collection\Contents();
-		$result = $contents->create($obj, true);
+		$result = $contents->create($obj);
 		
 		$this->assertTrue($result['success']);
 	}
@@ -99,7 +99,7 @@ class ContentsTest extends PHPUnit_Framework_TestCase {
 	 * 
 	 * The field text must be specified
 	 */
-	public function testCreateWithBadConfigurationAllowblank(){
+	public function testCreateWithBadConfigurationForAllowblankOnTextField(){
 		$this->_mockContentTypesService->expects($this->once())->method('findById')->will($this->returnValue(array('fields' => array(
 			array 	(	'cType' => 'text',
 						'config' => array 	(	'name' => 'text',
@@ -116,15 +116,55 @@ class ContentsTest extends PHPUnit_Framework_TestCase {
 												'allowBlank' => true,
 												'multivalued' => false,))))));
 		
-		$obj = array(	"typeId" => "50c0c8669a199d930f000001",
-						"fields" => array(	'text' => '',
+		$obj = array(	"typeId" => "123456789",
+						"fields" => array(	'text' => 'test',
 											'summary' => 'test',
 											'body' => '<p>Paragraphe</p>'),
-						"text" => "test");
+						"text" => "");
+						
+		$this->_mockWorkflowDataAccessService->expects($this->any())->method('create')->will($this->returnValue(array('success' => true,'data'=>array('id'=>'id'))));
 		
 		$contents = new \Rubedo\Collection\Contents();
-		$result = $contents->create($obj, true);
+		$result = $contents->create($obj);
 		
+		$this->assertFalse($result['success']);
+	}
+
+	/**
+	 * Test the verification of the configuration of a field
+	 * 
+	 * Case with bad values, should return false
+	 * 
+	 * The field body must be specified
+	 */
+	public function testCreateWithBadConfigurationForAllowblankOnBodyField(){
+		$this->_mockContentTypesService->expects($this->once())->method('findById')->will($this->returnValue(array('fields' => array(
+			array 	(	'cType' => 'text',
+						'config' => array 	(	'name' => 'text',
+												'allowBlank' => false,
+												'multivalued' => false,
+											)),
+			array 	(	'cType' => 'summary',
+						'config' => array 	(	'name' => 'summary',
+												'allowBlank' => true,
+												'multivalued' => false,
+											)),
+			array 	(	'cType' => 'body',
+						'config' => array 	(	'name' => 'body',
+												'allowBlank' => false,
+												'multivalued' => false,))))));
+		
+		$obj = array(	"typeId" => "123456789",
+						"fields" => array(	'text' => 'test',
+											'summary' => 'test',
+											'body' => ''),
+						"text" => "test");
+						
+		$this->_mockWorkflowDataAccessService->expects($this->any())->method('create')->will($this->returnValue(array('success' => true,'data'=>array('id'=>'id'))));
+		
+		$contents = new \Rubedo\Collection\Contents();
+		$result = $contents->create($obj);
+
 		$this->assertFalse($result['success']);
 	}
 	
@@ -161,7 +201,7 @@ class ContentsTest extends PHPUnit_Framework_TestCase {
 						"text" => "test");
 		
 		$contents = new \Rubedo\Collection\Contents();
-		$result = $contents->create($obj, true);
+		$result = $contents->create($obj);
 		$this->assertFalse($result['success']);
 	}
 	
@@ -197,8 +237,106 @@ class ContentsTest extends PHPUnit_Framework_TestCase {
 						"text" => "test");
 		
 		$contents = new \Rubedo\Collection\Contents();
-		$result = $contents->create($obj, true);
+		$result = $contents->create($obj);
 		$this->assertFalse($result['success']);
+	}
+	
+	/**
+	 * Test the verification of the configuration of a field
+	 * 
+	 * Case with good values, should return true
+	 * 
+	 * The field body must contain only alpha character
+	 */
+	public function testUpdateWithGoodConfigurationForAlphaVType(){
+		$this->_mockContentTypesService->expects($this->once())->method('findById')->will($this->returnValue(array('fields' => array(
+			array 	(	'cType' => 'text',
+						'config' => array 	(	'name' => 'text',
+												'allowBlank' => false,
+												'multivalued' => false,
+											)),
+			array 	(	'cType' => 'summary',
+						'config' => array 	(	'name' => 'summary',
+												'allowBlank' => true,
+												'multivalued' => false,
+											)),
+			array 	(	'cType' => 'body',
+						'config' => array 	(	'name' => 'body',
+												'allowBlank' => true,
+												'multivalued' => false,
+												'vtype' => 'alpha'))))));
+		
+		$obj = array(	"typeId" => "50c0c8669a199d930f000001",
+						"fields" => array(	'text' => 'test',
+											'summary' => 'test',
+											'body' => 'Paragraphe'),
+						"text" => "test");
+		
+		$this->_mockWorkflowDataAccessService->expects($this->any())->method('update')->will($this->returnValue(array('success' => true,'data'=>array('status'=>'test', "id" => "id"))));
+		
+		$contents = new \Rubedo\Collection\Contents();
+		$result = $contents->update($obj);
+		
+		$this->assertTrue($result['success']);
+	}
+
+	/**
+	 * Test the verification of the configuration of a field
+	 * 
+	 * Case with bad values, should return false
+	 * 
+	 * The body field contain an url and only allow email
+	 */
+	public function testUpdateWithBadConfigurationForEmailVType(){
+		$this->_mockContentTypesService->expects($this->once())->method('findById')->will($this->returnValue(array('fields' => array(
+			array 	(	'cType' => 'text',
+						'config' => array 	(	'name' => 'text',
+												'allowBlank' => false,
+												'multivalued' => false,
+											)),
+			array 	(	'cType' => 'summary',
+						'config' => array 	(	'name' => 'summary',
+												'allowBlank' => true,
+												'multivalued' => false,
+											)),
+			array 	(	'cType' => 'body',
+						'config' => array 	(	'name' => 'body',
+												'allowBlank' => true,
+												'multivalued' => false,
+												'vtype' => 'email'))))));
+		
+		$obj = array(	"typeId" => "50c0c8669a199d930f000001",
+						"fields" => array(	'text' => 'test',
+											'summary' => 'test',
+											'body' => 'http://test.fr'),
+						"text" => "test");
+		
+		$this->_mockWorkflowDataAccessService->expects($this->any())->method('update')->will($this->returnValue(array('success' => true,'data'=>array('status'=>'test', "id" => "id"))));
+		
+		$contents = new \Rubedo\Collection\Contents();
+		$result = $contents->update($obj);
+		
+		$this->assertFalse($result['success']);
+	}
+	
+	/**
+	 * Test if the destroy method works fine
+	 */
+	public function testDestroy() {
+		$this->_mockWorkflowDataAccessService->expects($this->once())->method('destroy')->will($this->returnValue(array("success" => true)));
+		$this->_mockDataIndexService->expects($this->once())->method('deleteContent');
+		
+		$obj = array(	"id" => "test",
+						"typeId" => "50c0c8669a199d930f000001",
+						"fields" => array(	'text' => 'test',
+											'summary' => 'test',
+											'body' => 'http://test.fr'),
+						"text" => "test");
+						
+		$contents = new \Rubedo\Collection\Contents();
+		$result = $contents->destroy($obj);
+		
+		$this->assertTrue($result['success']);
 	}
 	
 }

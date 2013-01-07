@@ -35,6 +35,8 @@ class Backoffice_TaxonomyController extends Backoffice_DataAccessController
 		parent::init();
 		
 		$this -> _dataService = Rubedo\Services\Manager::getService('Taxonomy');
+		$this -> _dataTermsService = Rubedo\Services\Manager::getService('TaxonomyTerms');
 	}
+	
 
 }

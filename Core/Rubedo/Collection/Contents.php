@@ -92,11 +92,12 @@ class Contents extends WorkflowAbstractCollection implements IContents
     /*
      * (non-PHPdoc) @see \Rubedo\Collection\WorkflowAbstractCollection::create()
      */
-    public function create (array $obj, $safe = true, $live = true)
+    public function create (array $obj, $options = array('safe'=>true), $live = true)
     {
         $obj = $this->_filterInputData($obj);
+
         if ($this->_isValidInput) {
-            $returnArray = parent::create($obj, $safe, $live);
+            $returnArray = parent::create($obj, $options, $live);
         } else {
             $returnArray = array(
                 'success' => false,
@@ -115,11 +116,11 @@ class Contents extends WorkflowAbstractCollection implements IContents
     /*
      * (non-PHPdoc) @see \Rubedo\Collection\WorkflowAbstractCollection::update()
      */
-    public function update (array $obj, $safe = true, $live = true)
+    public function update (array $obj, $options = array('safe'=>true), $live = true)
     {
         $obj = $this->_filterInputData($obj);
         if ($this->_isValidInput) {
-            $returnArray = parent::update($obj, $safe, $live);
+            $returnArray = parent::update($obj, $options, $live);
         } else {
             $returnArray = array(
                 'success' => false,
@@ -138,9 +139,9 @@ class Contents extends WorkflowAbstractCollection implements IContents
     /*
      * (non-PHPdoc) @see \Rubedo\Collection\AbstractCollection::destroy()
      */
-    public function destroy (array $obj, $safe = true)
+    public function destroy (array $obj, $options = array('safe'=>true))
     {
-        $returnArray = parent::destroy($obj, $safe);
+        $returnArray = parent::destroy($obj, $options);
         if ($returnArray["success"]) {
             $this->_unIndexContent($obj);
         }
@@ -182,19 +183,29 @@ class Contents extends WorkflowAbstractCollection implements IContents
         $contentTypeId = $obj['typeId'];
         $contentType = Manager::getService('ContentTypes')->findById($contentTypeId);
         $contentTypeFields = $contentType['fields'];
+		
         $fieldsArray = array();
         $missingField = array();
+		
+		$tempFields = array();
+		$tempFields['text'] = $obj['text'];
+        $tempFields['summary'] = $obj['fields']['summary'];
+		
         foreach ($contentTypeFields as $value) {
             $fieldsArray[$value['config']['name']] = $value;
             if (! isset($value['config']['allowBlank']) || ! $value['config']['allowBlank']) {
-                $missingField[$value['config']['name']] = $value['config']['name'];
+            	$result = false;
+            	if($value['config']['name'] == "text" || $value['config']['name'] == "summary"){
+            		$field = $value['config']['name'];
+            		$result = $this->_controlAllowBlank($tempFields[$field], false);
+            	}
+				if($result == false){
+                	$missingField[$value['config']['name']] = $value['config']['name'];
+				}
             }
         }
         
         $fieldsList = array_keys($fieldsArray);
-        $tempFields = array();
-        $tempFields['text'] = $obj['text'];
-        $tempFields['summary'] = $obj['fields']['summary'];
         
         foreach ($obj['fields'] as $key => $value) {
             if (in_array($key, array(
@@ -221,6 +232,7 @@ class Contents extends WorkflowAbstractCollection implements IContents
                     }
                 } else {
                     $this->_validateFieldValue($value, $fieldsArray[$key]['config'], $key);
+
                     $tempFields[$key] = $this->_filterFieldValue($value, $fieldsArray[$key]['cType']);
                 }
             }
@@ -230,7 +242,7 @@ class Contents extends WorkflowAbstractCollection implements IContents
         
         if (count($missingField) > 0) {
             foreach ($missingField as $value) {
-                $this->_inputDataErrors[$key] = 'missing field';
+                $this->_inputDataErrors[$value] = 'missing field';
             }
         }
         

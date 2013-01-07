@@ -91,6 +91,7 @@ class FrontOfficeTemplates implements  IFrontOfficeTemplates
         $this->_twig->addFilter('cleanHtml', new \Twig_Filter_Function('\\Rubedo\\Templates\\FrontOfficeTemplates::cleanHtml',array('is_safe' => array('html'))));
         
         $this->_twig->addFunction('url', new \Twig_Function_Function('\\Rubedo\\Templates\\FrontOfficeTemplates::url'));
+	    $this->_twig->addFunction('displaySingleUrl', new \Twig_Function_Function('\\Rubedo\\Templates\\FrontOfficeTemplates::displaySingleUrl'));
     }
 
     /**
@@ -113,9 +114,9 @@ class FrontOfficeTemplates implements  IFrontOfficeTemplates
     public function getTemplateDir()
     {
         if (!isset(self::$templateDir)) {
-            $this->_options = array('templateDir' => APPLICATION_PATH . "/../public/themes", 'cache' => APPLICATION_PATH . "/../cache/twig", 'debug' => true, 'auto_reload' => true);
+            $this->_options = array('templateDir' => APPLICATION_PATH . "/../public/templates", 'cache' => APPLICATION_PATH . "/../cache/twig", 'debug' => true, 'auto_reload' => true);
             if (isset($this->_service)) {
-                $this->_options = $this->_service->getCurrentOptions();
+                $this->_options = array_merge($this->_options,$this->_service->getCurrentOptions());
             }
 
             self::$templateDir = $this->_options['templateDir'];
@@ -147,7 +148,6 @@ class FrontOfficeTemplates implements  IFrontOfficeTemplates
     public function getCurrentTheme()
     {
         if (!isset(self::$_currentTheme)) {
-
             self::$_currentTheme = 'default';
         }
         return self::$_currentTheme;
@@ -171,6 +171,10 @@ class FrontOfficeTemplates implements  IFrontOfficeTemplates
     
     public static function url(array $urlOptions = array(), $reset = false, $encode = true){
         return Manager::getService('Url')->url($urlOptions,null, $reset, $encode);
+    }
+				
+    public static function displaySingleUrl($contentId,$siteId=null){
+	return Manager::getService('Url')->displaySingleUrl($contentId,$siteId);
     }
 
 }

@@ -33,31 +33,45 @@ class DataSearch extends DataAbstract implements IDataSearch
      * ES search
      *     
 	 * @see \Rubedo\Interfaces\IDataSearch::search()
-	 * @param string $terms terms to search
-	 * @param string $type optional content type filter
-	 * @param string $lang optional lang filter
-	 * @param string $author optional author filter
-	 * @param string $date optional date filter
-	 * @param string $taxonomy optional taxonomy filter
-	 * @param string $pager optional pager, default set to 10
-	 * @param string $orderBy optional  orderBy, default sort on score
-	 * @param string $pageSize optional page size, "all" for everything
+	 * @params array $params search parameters : query, type, lang, author, date, taxonomy, pager, orderby, pagesize
      * @return Elastica_ResultSet
      */
-    public function search ($terms, $type=null, $lang=null, $author=null, $date=null, $taxonomy=null, $pager=null, $orderBy=null, $pageSize=null) {
-    	
+    public function search (array $params) {
+
+		$filters = array();
+		
+		// Get taxonomies
+		$collection = \Rubedo\Services\Manager::getService('MongoDataAccess');
+		$collection->init("Taxonomy");	
+		$taxonomyList = $collection->read();
+		$taxonomies = $taxonomyList['data'];
+		
+		// Default parameters	
+		$defaultVars = array(
+			'query' => '',
+			'type' => '',
+			'lang' => '',
+			'author' => '',
+			'date' => '',
+			'pager' => 0,
+			'orderby' => '_score',
+			'pagesize' => 10
+		);
+		
 		// set default options
-		if (is_null($lang)) {
+		if (!array_key_exists('lang',$params)) {
         	$session = Manager::getService('Session');
-        	$lang = $session->get('lang','fr');
+        	$params['lang'] = $session->get('lang','fr');
 		}
 		
-		if (is_null($pager)) $pager = 0;
+		if (!array_key_exists('pager',$params)) $params['pager'] = $defaultVars['pager'];
 		
-		if (is_null($orderBy)) $orderBy = "_score";
+		if (!array_key_exists('orderby',$params)) $params['orderby'] = $defaultVars['orderby'];
 		
-		if (is_null($pageSize)) $pageSize = 10;
-				
+		if (!array_key_exists('pagesize',$params)) $params['pagesize'] = $defaultVars['pagesize'];
+		
+		if (!array_key_exists('query',$params)) $params['query']= $defaultVars['query'];
+					
 		try{
 
 			// Build global filter
@@ -75,26 +89,33 @@ class DataSearch extends DataAbstract implements IDataSearch
         	}
 			 */
 			
+			// filter on query
+			if ($params['query']!='') {
+				$filters['query']=$params['query'];
+			}
+			
 			// filter on type
-			if ($type != '') {
+			if (array_key_exists('type',$params)) {
 				$typeFilter = new \Elastica_Filter_Term();
-        		$typeFilter->setTerm('contentType', $type);
+        		$typeFilter->setTerm('contentType', $params['type']);
 				$globalFilter->addFilter($typeFilter);
+				$filters["type"]=$params['type'];
 				$setFilter = true;
 			}
 			
 			// filter on author
-			if ($author != '') {
+			if (array_key_exists('author',$params)) {
 				$authorFilter = new \Elastica_Filter_Term();
-        		$authorFilter->setTerm('author', $author);
+        		$authorFilter->setTerm('author', $params['author']);
 				$globalFilter->addFilter($authorFilter);
+				$filters["author"]=$params['author'];
 				$setFilter = true;
 			}
 			
 			// filter on date
-			if ($date!= '') {
+			if (array_key_exists('date',$params)) {
 				$dateFilter = new \Elastica_Filter_Range();
-				$d = $date/1000;
+				$d = $params['date']/1000;
 				$dateFrom = $dateTo = mktime(0, 0, 0, date('m',$d), date('d',$d), date('Y',$d))*1000; 
 				$dateTo = mktime(0, 0, 0, date('m',$d)+1, date('d',$d), date('Y',$d))*1000;  
         		$dateFilter->addField('lastUpdateTime', array('from' => $dateFrom, "to" => $dateTo));
@@ -103,15 +124,28 @@ class DataSearch extends DataAbstract implements IDataSearch
 			}			
 
 			// filter on taxonomy
-			if ($taxonomy != '') {
-				$taxonomyFilter = new \Elastica_Filter_Term();
-        		$taxonomyFilter->setTerm('taxonomy.Tags', $taxonomy);
-				$globalFilter->addFilter($taxonomyFilter);
-				$setFilter = true;
+			foreach ($taxonomies as $taxonomy) {
+				$vocabulary = $taxonomy['name'];
+				if (array_key_exists($vocabulary,$params)) {
+				    if(!is_array($params[$vocabulary])){
+				        $params[$vocabulary] = array($params[$vocabulary]);
+				    }
+					
+					foreach ($params[$vocabulary] as $term){
+					    $taxonomyFilter = new \Elastica_Filter_Term();
+					    $taxonomyFilter->setTerm('taxonomy.'.$vocabulary, $term);
+					    $globalFilter->addFilter($taxonomyFilter);
+					    $filters[$vocabulary][]=$term;
+					    $setFilter = true;
+					}
+					
+					
+								
+				}
 			}
 						
 			// Set query on terms
-			$elasticaQueryString = new \Elastica_Query_QueryString($terms."*");
+			$elasticaQueryString = new \Elastica_Query_QueryString($params['query']."*");
 			
 			$elasticaQuery = new \Elastica_Query();
 			
@@ -150,34 +184,34 @@ class DataSearch extends DataAbstract implements IDataSearch
 			$elasticaQuery->addFacet($elasticaFacetDate);
 
 			// Define taxonomy facets
-			$collection = \Rubedo\Services\Manager::getService('MongoDataAccess');
-			$collection->init("Taxonomy");	
-			$taxonomyList = $collection->read();
-			foreach ($taxonomyList['data'] as $taxonomy) {
+			foreach ($taxonomies as $taxonomy) {
 				$vocabulary = $taxonomy['name'];	
 				$elasticaFacetTaxonomy = new \Elastica_Facet_Terms($vocabulary);
 				$elasticaFacetTaxonomy->setField('taxonomy.'.$taxonomy['name']);
-				$elasticaFacetTaxonomy->setSize(10);
-				$elasticaFacetTaxonomy->setOrder('reverse_count');
+				$elasticaFacetTaxonomy->setSize(20);
+				$elasticaFacetTaxonomy->setOrder('count');
 				if ($setFilter) $elasticaFacetTaxonomy->setFilter($globalFilter);
 				// Add that facet to the search query object.
 				$elasticaQuery->addFacet($elasticaFacetTaxonomy);					        
 			}
 				
 			// Add pagination 		
-			if ($pageSize!="all") {
-				$elasticaQuery->setSize($pageSize)->setFrom($pager*$pageSize);
+			if ($params['pagesize']!="all") {
+				$elasticaQuery->setSize($params['pagesize'])->setFrom($params['pager']*$params['pagesize']);
 			} 
 						
 			// add sort
-			$elasticaQuery->setSort(array($orderBy =>"desc"));
+			$elasticaQuery->setSort(array($params['orderby'] =>"desc"));
 
 			// run query
 			$elasticaResultSet = $this->_content_index->search($elasticaQuery);
 			
 			// Return resultset
-
-			return($elasticaResultSet);
+			$result = array(
+				"resultSet" => $elasticaResultSet,
+				"filters" => $filters
+			);
+			return($result);
 			
 		} catch (Exception $e) {
             var_dump($e->getMessage());

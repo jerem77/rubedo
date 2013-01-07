@@ -49,11 +49,12 @@ class config
 		'Session'					=>	'Rubedo\\Interfaces\\User\\ISession',
 		'Authentication'			=>	'Rubedo\\Interfaces\\User\\IAuthentication',
 		'CurrentTime'				=>	'Rubedo\\Interfaces\\Time\\ICurrentTime',
-		'Date'					=>	'Rubedo\\Interfaces\\Time\\IDate',
+		'Date'					    =>	'Rubedo\\Interfaces\\Time\\IDate',
 		'Url'						=>	'Rubedo\\Interfaces\\Router\\IUrl',
 		'PageContent'				=>	'Rubedo\\Interfaces\\Content\\IPage',
 		'FrontOfficeTemplates'		=>	'Rubedo\\Interfaces\\Templates\\IFrontOfficeTemplates',
 		'Users'						=>	'Rubedo\\Interfaces\\Collection\\IUsers',
+		'UrlCache'					=>	'Rubedo\\Interfaces\\Collection\\IUrlCache',
 		'Masks'						=>	'Rubedo\\Interfaces\\Collection\\IMasks',
 		'Blocks'					=>	'Rubedo\\Interfaces\\Collection\\IBlocks',
 		'ReusableElements'			=>	'Rubedo\\Interfaces\\Collection\\IReusableElements',
@@ -76,7 +77,8 @@ class config
 		'Versioning'				=>	'Rubedo\\Interfaces\\Collection\\IVersioning',
 		'Images'					=>	'Rubedo\\Interfaces\\Collection\\IImages',
 		'MediaTypes'				=>	'Rubedo\\Interfaces\\Collection\\IMediaTypes',
-		
+		'Cache'						=>	'Rubedo\\Interfaces\\Collection\\ICache',
+		'Queries'					=>	'Rubedo\\Interfaces\\Collection\\IQueries',
 	);
 
     /**

@@ -16,7 +16,7 @@
  */
 namespace Rubedo\Collection;
 
-use Rubedo\Interfaces\Collection\IPages;
+use Rubedo\Interfaces\Collection\IPages,Rubedo\Services\Manager;
 
 /**
  * Service to handle Pages
@@ -33,5 +33,41 @@ class Pages extends AbstractCollection implements IPages
 		$this->_collectionName = 'Pages';
 		parent::__construct();
 	}
+	
+	public function matchSegment($urlSegment,$parentId,$siteId){
+	    return $this->_dataService->findOne(array('text'=>$urlSegment,'parentId'=>$parentId,'site'=>$siteId));
+	}
+	
+
+	/* (non-PHPdoc)
+     * @see \Rubedo\Collection\AbstractCollection::destroy()
+     */
+    public function destroy (array $obj, $options = array('safe'=>true))
+    {
+        $pageId = $obj['id'];
+        $returnValue = parent::destroy($obj,$options);
+        Manager::getService('UrlCache')->customDelete(array('pageId'=>$pageId),$options);
+        return $returnValue;
+    }
+
+	/* (non-PHPdoc)
+     * @see \Rubedo\Collection\AbstractCollection::update()
+     */
+    public function update (array $obj, $options = array('safe'=>true))
+    {
+        $pageId = $obj['id'];
+        $returnValue = parent::update($obj,$options);
+        Manager::getService('UrlCache')->customDelete(array('pageId'=>$pageId),$options);
+        return $returnValue;
+    }
+	
+	public function findByNameAndSite($name,$siteId){
+		$filterArray['site'] = $siteId;
+        $filterArray['text'] = $name;
+		return $this->_dataService->findOne($filterArray);
+	}
+
+	
+	
 	
 }

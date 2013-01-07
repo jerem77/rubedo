@@ -124,7 +124,7 @@
 		<echo>To build report , phing report</echo>
 		<echo>To run unit tests, phing phpunit</echo>
 	</target>
-	<target name="report" depends="prepare, phpcs, phpmd, phpdepend, phpcpd, phpdoc, phpunit"/>
+	<target name="report" depends="prepare, phpcs, phpmd, phpdepend, phpcpd, phpdoc, phpunit,phpunitcoverage"/>
 		
 	<target name="restore-db">
 		<exec
@@ -146,9 +146,11 @@
 		
 		<mkdir dir="${project.basedir}/cache/twig"/>
 		<mkdir dir="${project.basedir}/cache/htmlpurifier"/>
+		<mkdir dir="${project.basedir}/cache/zend"/>
 		
 		<chmod file="${project.basedir}/cache" mode="777"/>
 		<chmod file="${project.basedir}/cache/twig" mode="777"/>
 		<chmod file="${project.basedir}/cache/htmlpurifier" mode="777"/>
+		<chmod file="${project.basedir}/cache/zend" mode="777"/>
 	</target>
 </project>

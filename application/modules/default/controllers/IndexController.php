@@ -68,6 +68,11 @@ class IndexController extends Zend_Controller_Action
      * @var string
      */
     protected $_pageId;
+    
+    /**
+     * array of parent IDs
+     */
+    protected $_rootlineArray;
 
     /**
      * Main Action : render the Front Office view
@@ -76,6 +81,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction ()
     {
+        
         // init service variables
         $this->_serviceUrl = Manager::getService('Url');
         $this->_servicePage = Manager::getService('PageContent');
@@ -104,11 +110,11 @@ class IndexController extends Zend_Controller_Action
             } else {
                 Zend_Registry::set('draft', false);
             }
-        }else{
+        } else {
             Zend_Registry::set('draft', false);
         }
         
-        $this->_serviceTemplate->setCurrentTheme($this->_session->get('themeCSS', 'default'));
+        // $this->_serviceTemplate->setCurrentTheme();
         
         // Load the CSS files
         
@@ -120,9 +126,13 @@ class IndexController extends Zend_Controller_Action
         $this->_servicePage->appendJs('/js/scripts.js');
         
         $this->_pageId = $this->getRequest()->getParam('pageId');
-        
+                
+        if(!$this->_pageId){
+            throw new Zend_Controller_Exception('No Page found');
+        }
         // build contents tree
         $this->_pageParams = $this->_getPageInfo($this->_pageId);
+        $this->_servicePage->setCurrentSite($this->_pageParams["site"]);
         
         // Build Twig context
         $twigVar = $this->_pageParams;
@@ -134,8 +144,10 @@ class IndexController extends Zend_Controller_Action
         $twigVar['js'] = $this->_servicePage->getJs();
         $twigVar['isLoggedIn'] = $isLoggedIn;
         
+        $pageTemplate = $this->_serviceTemplate->getFileThemePath($this->_pageParams['template']);
+        
         // Render content with template
-        $content = $this->_serviceTemplate->render($this->_pageParams['template'], $twigVar);
+        $content = $this->_serviceTemplate->render($pageTemplate, $twigVar);
         
         // disable ZF view layer
         $this->getHelper('ViewRenderer')->setNoRender();
@@ -145,6 +157,13 @@ class IndexController extends Zend_Controller_Action
         $this->getResponse()->appendBody($content, 'default');
     }
 
+    public function versionAction(){
+        $versionArray = array('Zend_Framework'=>Zend_Version::VERSION);
+        
+        $this->_helper->json($versionArray);
+        
+    }
+    
     /**
      * Return page infos based on its ID
      *
@@ -156,13 +175,32 @@ class IndexController extends Zend_Controller_Action
     {
         $pageService = Manager::getService('Pages');
         $pageInfo = $pageService->findById($pageId);
+        
+        $this->_site = Manager::getService('Sites')->findById($pageInfo['site']);
+        if (! isset($this->_site['theme'])) {
+            $this->_site['theme'] = 'default';
+        }
+        $this->_serviceTemplate->setCurrentTheme($this->_site['theme']);
+        
         $this->_servicePage->setPageTitle($pageInfo['text']);
+        $rootline = $pageService->getAncestors($pageInfo);
+        $this->_rootlineArray=array();
+        foreach ($rootline as $ancestor){
+            $this->_rootlineArray[]=$ancestor['id'];
+        }
+        $this->_rootlineArray[] = $pageId;
         $pageInfo['rows'] = $this->_getRowsInfos($pageInfo['rows']);
-        $pageInfo['template'] = 'root/page.html.twig';
+        $pageInfo['template'] = 'page.html.twig';
         
         return $pageInfo;
     }
 
+    /**
+     * get Columns infos
+     * 
+     * @param array $columns
+     * @return array
+     */
     protected function _getColumnsInfos (array $columns = null)
     {
         if ($columns === null) {
@@ -170,6 +208,11 @@ class IndexController extends Zend_Controller_Action
         }
         $returnArray = $columns;
         foreach ($columns as $key => $column) {
+            $returnArray[$key]['template'] = Manager::getService('FrontOfficeTemplates')->getFileThemePath('column.html.twig');
+            $returnArray[$key]['classHtml'] = isset($column['classHTML'])?$column['classHTML']:null;
+            $returnArray[$key]['classHtml'] .= $this->_buildResponsiveClass($column['responsive']);
+            $returnArray[$key]['idHtml'] = isset($column['idHTML'])?$column['idHTML']:null;
+            
             if (is_array($column['blocks'])) {
                 $returnArray[$key]['blocks'] = $this->_getBlocksInfos($column['blocks']);
             } else {
@@ -179,6 +222,12 @@ class IndexController extends Zend_Controller_Action
         return $returnArray;
     }
 
+    /**
+     * get Blocks infos
+     *
+     * @param array $blocks
+     * @return array
+     */
     protected function _getBlocksInfos (array $blocks)
     {
         $returnArray = array();
@@ -188,6 +237,13 @@ class IndexController extends Zend_Controller_Action
         return $returnArray;
     }
 
+    
+    /**
+     * get Rows infos
+     * 
+     * @param array $rows
+     * @return array
+     */
     protected function _getRowsInfos (array $rows = null)
     {
         if ($rows === null) {
@@ -195,6 +251,11 @@ class IndexController extends Zend_Controller_Action
         }
         $returnArray = $rows;
         foreach ($rows as $key => $row) {
+            $returnArray[$key]['template'] = Manager::getService('FrontOfficeTemplates')->getFileThemePath('row.html.twig');
+            $returnArray[$key]['classHtml'] = isset($row['classHTML'])?$row['classHTML']:null;
+            $returnArray[$key]['classHtml'] .= $this->_buildResponsiveClass($row['responsive']);
+            $returnArray[$key]['idHtml'] = isset($row['idHTML'])?$row['idHTML']:null;
+            
             if (is_array($row['columns'])) {
                 $returnArray[$key]['columns'] = $this->_getColumnsInfos($row['columns']);
             }
@@ -213,16 +274,33 @@ class IndexController extends Zend_Controller_Action
     {
         $params = array();
         $params['block-config'] = $block['configBloc'];
+        $params['site'] = $this->_site;
+        $params['blockId'] = $block['id'];
+        $params['prefix'] = isset($block['urlPrefix']) ? $block['urlPrefix'] : $block['id'];
+        $params['classHtml'] = isset($block['classHTML'])?$block['classHTML']:null;
+        $params['classHtml'] .= $this->_buildResponsiveClass($block['responsive']);
+        $params['idHtml'] = isset($block['idHTML'])?$block['idHTML']:null;
+        
+        $blockQueryParams = $this->getRequest()->getParam($params['prefix'], array());
+        foreach ($blockQueryParams as $key => $value) {
+            $params[$key] = $value;
+        }
+        
         switch ($block['bType']) {
             case 'Bloc de navigation':
                 $controller = 'nav-bar';
                 $params['currentPage'] = $this->_pageId;
-                $params['rootPage'] = $this->_serviceUrl->getPageId('accueil');
+                $params['rootline'] = $this->_rootlineArray;
+                $params['rootPage'] = $this->_serviceUrl->getPageId('accueil', $this->getRequest()
+                    ->getHttpHost());
                 
                 break;
             case 'Carrousel':
                 $controller = 'carrousel';
                 break;
+            case 'Gallerie Flickr':
+                    $controller = 'flickr-gallery';
+                    break;
             case 'Liste de Contenus':
                 $controller = 'content-list';
                 
@@ -234,6 +312,7 @@ class IndexController extends Zend_Controller_Action
                 $controller = 'search';
                 break;
             case 'Fil d\'Ariane':
+                $params['rootline'] = $this->_rootlineArray;
                 $controller = 'breadcrumbs';
                 break;
             case 'Twig':
@@ -270,5 +349,43 @@ class IndexController extends Zend_Controller_Action
             'data' => $data,
             'template' => $template
         );
+    }
+
+    protected function _buildResponsiveClass ($responsiveArray)
+    {
+        foreach ($responsiveArray as $key => $value) {
+            if (false == $value) {
+                unset($responsiveArray[$key]);
+            }
+        }
+        
+        $responsiveArray = array_keys($responsiveArray);
+        
+        switch (count($responsiveArray)) {
+            case 3:
+                $class = '';
+                break;
+            case 2:
+                $hiddenArray = array(
+                    'tablet',
+                    'desktop',
+                    'phone'
+                );
+                list ($hiddenMedia) = array_values(array_diff($hiddenArray, $responsiveArray));
+                
+                $class = ' hidden-' . $hiddenMedia;
+                break;
+            case 0:
+                $class = ' hidden';
+                break;
+            case 1:
+            default:
+                $class = '';
+                foreach ($responsiveArray as $value) {
+                    $class .= ' visible-' . $value;
+                }
+                break;
+        }
+        return $class;
     }
 }
