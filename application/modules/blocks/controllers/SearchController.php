@@ -37,8 +37,12 @@ class Blocks_SearchController extends Blocks_AbstractController
         
         $params['pagesize'] = $this->getRequest()->getParam('pagesize', 10);
         
-        $site = $this->getRequest()->getParam('site');
-		$params['Sites']=$site['text'];
+        if($params['constrainToSite']){
+            $site = $this->getRequest()->getParam('site');
+            $params['Navigation'][]=$site['text'];
+            $serverParams['Navigation'][]=$site['text'];
+        }
+		
         
         $query = \Rubedo\Services\Manager::getService('ElasticDataSearch');
         $query->init();
@@ -109,6 +113,18 @@ class Blocks_SearchController extends Blocks_AbstractController
         $output['nbresults'] = $nbresults;
         $output['pagecount'] = $pagecount;
         $output['facets'] = $elasticaFacets;
+        
+        if($params['constrainToSite']){
+            foreach ($filters['Navigation'] as $key => $value){
+                if($value == $site['text']){
+                    unset($filters['Navigation'][$key]);
+                }
+            }
+            if(count($filters['Navigation'])==0){
+                unset($filters['Navigation']);
+            }
+        }
+        
         $output['filters'] = $filters;
         
 

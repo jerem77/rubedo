@@ -259,12 +259,19 @@ class DataIndex extends DataAbstract implements IDataIndex
          if (isset($data[$space]["taxonomy"])) {
                 $tt = \Rubedo\Services\Manager::getService('TaxonomyTerms');
                 foreach ($data[$space]["taxonomy"] as $vocabulary => $terms) {
-					$collection = \Rubedo\Services\Manager::getService('MongoDataAccess');
-					$collection->init("Taxonomy");
+                    if(!is_array($terms)){
+                        continue;
+                    }
+					$collection = \Rubedo\Services\Manager::getService('Taxonomy');
+					//$collection->init("Taxonomy");
 					$taxonomy = $collection->findById($vocabulary);
-					$termsArray = array();				
+					$termsArray = array();
+								
                     foreach ($terms as $term) {
                     	$term = $tt->findById($term);
+                    	if(!$term){
+                    	    continue;
+                    	}
 						$termsArray = $tt->getAncestors($term);
 						$termsArray[] = $term;
 						$tmp = array();
@@ -275,7 +282,6 @@ class DataIndex extends DataAbstract implements IDataIndex
 					}
                 }
          }
-
 		$currentDocument = new \Elastica_Document($id, $contentData);
 		
 		if (isset($contentData['attachment']) && $contentData['attachment'] != '') {

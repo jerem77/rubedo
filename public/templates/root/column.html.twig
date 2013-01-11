@@ -1,5 +1,8 @@
 <div class="{% if span > 0 %}span{{span}}{% endif %}{% if offset > 0 %} offset{{offset}}{% endif %} {{ classHtml }}"
  {% if idHtml %}id="{{ idHtml }}"{% endif %}>
+     {% if displayTitle %}
+	<h3>{{ eTitle }}</h3>
+	{% endif %}
 	<!-- process nested rows & blocks -->
 	{% if blocks %}
 		{% for block in blocks %}

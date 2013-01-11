@@ -1,4 +1,8 @@
+
 <div class="row {{ classHtml }}" {% if idHtml %}id="{{ idHtml }}"{% endif %}>
+	{% if displayTitle %}
+	<h3>{{ eTitle }}</h3>
+	{% endif %}
 	<!-- process columns -->
 	{% if columns %}
 		{% for column in columns %}

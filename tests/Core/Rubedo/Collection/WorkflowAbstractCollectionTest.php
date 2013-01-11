@@ -41,8 +41,7 @@ class WorkflowAbstractCollectionTest extends PHPUnit_Framework_TestCase {
      * init the Zend Application for tests
      */
     public function setUp() {
-        $this->bootstrap = new Zend_Application(APPLICATION_ENV, APPLICATION_PATH . '/configs/application.ini');
-		$this->bootstrap->bootstrap();
+        testBootstrap();
         $this->_mockDataAccessService = $this->getMock('Rubedo\\Mongo\\DataAccess');
         Rubedo\Services\Manager::setMockService('MongoDataAccess', $this->_mockDataAccessService);
 		$this->_mockWorkflowDataAccessService = $this->getMock('Rubedo\\Mongo\\WorkflowDataAccess');
@@ -51,19 +50,7 @@ class WorkflowAbstractCollectionTest extends PHPUnit_Framework_TestCase {
 
         parent::setUp();
     }
-	/*
-	 * Test if FindById call method setLive once when live is true
-	 */
-	public function testNormalFindByIdWithLiveToTrue(){
-		$this->_mockWorkflowDataAccessService->expects($this->once())->method('setLive');
-		$this->_mockWorkflowDataAccessService->expects($this->never())->method('setWorkspace');
-		$this->_mockWorkflowDataAccessService->expects($this->once())->method('findById');
-		
-		$contentId="id";
-		$collection = new testWorkflowCollection();
-		$collection->findById($contentId);
-		
-	}
+
 	/*
 	 * Test if FindById call method setWorkspace once when live is false
 	 */
@@ -77,36 +64,23 @@ class WorkflowAbstractCollectionTest extends PHPUnit_Framework_TestCase {
 		$collection->findById($contentId,false);
 		
 	}
-		/*
-		 * test if create function works fine when live param is false and create function return status published
-		 */
-	public function testCreateWithLiveFalseAndStatusPublished(){
-		$createReturn["data"]["status"]="published";
-		$createReturn["data"]["id"]="unId";
-		$this->_mockWorkflowDataAccessService->expects($this->never())->method('setLive');
-		$this->_mockWorkflowDataAccessService->expects($this->once())->method('setWorkspace');
+
+	public function testNormalCreate()
+	{
+		$createReturn['success']=true;
+		$createReturn['data']['status']='published';
+		$createReturn['data']['id']='testId';
+		$publishReturn['success']=true;
 		$this->_mockWorkflowDataAccessService->expects($this->once())->method('create')->will($this->returnValue($createReturn));
-		$this->_mockWorkflowDataAccessService->expects($this->once())->method('publish');
+			$this->_mockWorkflowDataAccessService->expects($this->once())->method('setWorkspace');
+			$this->_mockWorkflowDataAccessService->expects($this->once())->method('publish')->will($this->returnValue($publishReturn));
 		
-		$obj["test"]="test";
+		$obj=array("value"=>"test");
 		$collection = new testWorkflowCollection();
-		$result =  $collection->create($obj, array('safe'=>true),false);
+		$result=$collection->create($obj);
+		$this->assertTrue($result['success']);
 	}
-		/*
-		 * test if create function works fine when live param istrue and create function not return status published
-		 */
-	public function testCreateWithLiveStatusNotPublished(){
-		$createReturn["data"]["status"]="notpublished";
-		$createReturn["data"]["id"]="unId";
-		$this->_mockWorkflowDataAccessService->expects($this->once())->method('setLive');
-		$this->_mockWorkflowDataAccessService->expects($this->never())->method('setWorkspace');
-		$this->_mockWorkflowDataAccessService->expects($this->once())->method('create')->will($this->returnValue($createReturn));
-		$this->_mockWorkflowDataAccessService->expects($this->never())->method('publish');
-		
-		$obj["test"]="test";
-		$collection = new testWorkflowCollection();
-		$result =  $collection->create($obj, array('safe'=>true),true);
-	}
+
 	/*
 	 * test if readChild function works fine
 	 */
