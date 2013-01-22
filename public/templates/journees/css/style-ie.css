@@ -378,9 +378,9 @@ background-image: url('../images/headerLogo.png');
 	border-collapse:separate !important;
 	border-spacing:20px !important;
 }
-*+html #programme-content table tr td
+#programme-content table tr td
 {
-	
+	margin-left:20px !important;
 	
 }
 .cell100px
