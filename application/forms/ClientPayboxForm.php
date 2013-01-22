@@ -44,7 +44,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		));
 		
 		$this->addElement(	'text', 'firstname', array(
-            				'label'      => 'Prenom :',
+            				'label'      => 'Prénom :',
             				'decorators' => $decorateur,
             				'required'  	=> true,
             				'validators' => array(
@@ -89,12 +89,12 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		));
 		
 		$this->addElement(	'text', 'officeTelNumber', array(
-            				'label'      => 'Telephone cabinet :',
+            				'label'      => 'Téléphone cabinet :',
             				'decorators' => $decorateur,
 		));
 		
 		$this->addElement(	'text', 'mobilePhoneNumber', array(
-            				'label'      => 'Telephone portable :',
+            				'label'      => 'Téléphone portable :',
             				'decorators' => $decorateur,
 		));
 		
@@ -108,7 +108,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		));
 		
 		$this->addElement(	'select', 'activity', array(
-            				'label'      => 'Activite :',
+            				'label'      => 'Activité :',
             				'decorators' => $decorateur,
             				'multiOptions' => array(
             					'assitance dentaire' => 'Assistante Dentaire', 
@@ -117,7 +117,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		));
 		
 		$this->addElement(	'text', 'diploma', array(
-            				'label'      => 'Diplome :',
+            				'label'      => 'Diplôme :',
             				'decorators' => $decorateur,
             				'validators' => array(
 				            	'alnum',
@@ -126,7 +126,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		));
 		
 		$this->addElement(	'text', 'student', array(
-            				'label'      => 'Si vous etes etudiant, nom faculte :',
+            				'label'      => 'Si vous êtes étudiant, nom de la faculté :',
             				'decorators' => $decorateur,
             				'validators' => array(
 				            	'alnum',
@@ -134,7 +134,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		));
 		
 		$this->addElement(	'text', 'studentGraduationYear', array(
-            				'label'      => 'Annee suivie :',
+            				'label'      => 'Année suivie :',
             				'decorators' => $decorateur,
             				'validators' => array(
 				            	'digits',
@@ -142,18 +142,13 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		));
 		
 		$this->addElement(	'checkbox', 'billingAddress', array(
-            				'label'      => 'Merci de cocher cette case si l\'adresse de facturation est differente de celle renseignee ci-dessus',
+            				'label'      => 'Merci de cocher cette case si l\'adresse de facturation est différente de celle renseignée ci-dessus',
             				'decorators' => $decorateur,
 		));
 		
-		$this->addElement(	'checkbox', 'cardPayment', array(
-            				'label'      => 'Paiement en ligne',
+		$this->addElement(	'radio', 'payment', array(
             				'decorators' => $decorateur,
-		));
-		
-		$this->addElement(	'checkbox', 'checkPayment', array(
-            				'label'      => 'Cheque',
-            				'decorators' => $decorateur,
+            				'multiOptions' => array('card' => 'Paiement en ligne', 'check' => 'Chèque')
 		));
 
 		$this->addElement('submit', 'submit', array(
