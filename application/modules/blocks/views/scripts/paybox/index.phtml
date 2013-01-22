@@ -1,5 +1,136 @@
-<h1>Inscrivez-vous d&egrave;s maintenant :</h1>
+<form method="<?php echo $this->paybox -> getMethod(); ?>" action="<?php echo $this->paybox -> getAttrib('action'); ?>">
+<div id="content-inscription" style="padding-top:50px; background-color:#e3e4e5; width:940px; ">
+	<div style="width:740px; margin-left:100px; border-top:0px !important; border:1px solid #C0C0C0; border-bottom: 0px; padding-bottom: 15px;">
+		<div class="row" style="margin-left:5px;">
+			<div class="span3" style="height:35px; width:150px; background-color:#008bcb;">
+				<div class="big-title" style="padding: 10px 10px 10px 10px;">
+					Inscription :
+				</div>
+			</div>
+			<div class="span2" style=" margin-left:-10px;">
+				<div class="end" style="background-color:#008bcb; height:35px; width:30px;"> </div>
+			</div>
+		</div>
+		<div class="row" style="margin-top:15px; margin-left:5px; padding:10px 0px 10px 0px; border-top:1px ridge; border-bottom:1px ridge;">
+			<div class="span6" style="font-weight:bold;">
+				INFORMATIONS PERSONNELLES
+			</div>
+			<span class="span1" > Fleche Bas</span>
+		</div>
+		<!-- eventuellement du JS pour slideDown le menu -->
+		<div class="row" id="infoinscrip" style="margin-top:15px; margin-left:5px; padding:10px 0px 10px 0px; border-top:1px ridge; border-bottom:1px ridge;">
+			
+				<table style="width:98%;">
+					<tr>
+						<td colspan="6">
+							<label style="font-weight:bold;color:#008AC2;">Titre : </label>
+							<select style="width:48.5%">
+								<option>Monsieur</option>
+								<option>Madame</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3">
+							<label style="font-weight:bold;color:#008AC2;">Nom* :</label>
+							<input style="width:95%" type="text" />
+						</td>
+						<td colspan="3">
+							<label style="font-weight:bold;color:#008AC2;">Prenom* :</label>
+							<input style="width:95%" type="text" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="6">
+							<label style="font-weight:bold;color:#008AC2;">Adresse* :</label>
+							<input type="text" style="width:97.5%;"/>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<label style="font-weight:bold;color:#008AC2;">Code Postal* :</label>
+							<input style="width:93%" type="text" />
+						</td>
+						<td colspan="2">
+							<label style="font-weight:bold;color:#008AC2;">Ville* :</label>
+							<input style="width:93%" type="text" />
+						</td>
+						<td colspan="2">
+							<label style="font-weight:bold;color:#008AC2;">Pays* :</label>
+							<input style="width:93%" type="text" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3">
+							<label style="font-weight:bold;color:#008AC2;">Téléphone Cabinet :</label>
+							<input style="width:95%" type="text" />
+						</td>
+						<td colspan="3">
+							<label style="font-weight:bold;color:#008AC2;">Téléphone Portable :</label>
+							<input style="width:95%" type="text" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="6">
+							<label style="font-weight:bold;color:#008AC2;">E-mail* :</label>
+							<input style="width:47.5%" type="text" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="6">
+							<label style="font-weight:bold;color:#008AC2;">Activité :</label>
+							<input style="width:47.5%" type="text" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="6">
+							<label style="font-weight:bold;color:#008AC2;">Diplôme :</label>
+							<input style="width:47.5%" type="text" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3">
+							<label style="font-weight:bold;color:#008AC2;">Si vous êtes étudiants, nom de la faculté </label>
+							<input style="width:95%" type="text" />
+						</td>
+						<td colspan="3">
+							<label style="font-weight:bold;color:#008AC2;">Année suivie </label>
+							<input style="width:95%" type="text" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="6"><input type="checkbox" /> Merci de cocher cette case si l'adresse de facturation diffère de celle renseignée ci-dessus.</td>
+					</tr>
+					<tr>
+						<td colspan="6"><input type="submit" style=" float:right; margin-right:30px; background-color:#656565; border:0px; color:#FFFFFF; width:70px; height:20px; font-weight:bold;" />
+							<div class="end" style=" float:right; margin-right:-80px; background-color: #656565; width:20px; height:20px;"></div></td>
+					</tr>
+				</table>
+		</div>
+		<div class="row" style="margin-left:5px; margin-top:15px;">
+			<div class="span3" style="height:35px; width:150px; background-color:#008bcb;">
+				<div class="big-title" style="padding: 10px 10px 10px 10px;">
+					Règlement : 
+				</div>
+			</div>
+			<div class="span2" style=" margin-left:-10px;">
+				<div class="end" style="background-color:#008bcb; height:35px; width:30px;"></div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="span6" style="margin-left:75px; margin-top:10px;">
+				<table>
+					<tr>
+						<td style="font-weight:bold; font-size:1.3em;">Tarif unique :180 euros</td>
+					</tr>
+					<tr><td style="font-size: 1.1em;">MODALITÉS DE PAIEMENT</td></tr>
+					<tr><td><input type="checkbox" /> paiement en ligne</td></tr>
+					<tr><td><input type="checkbox" /> chèque</td></tr>
+				</table>
 
-<?php echo $this->paybox; ?>
+			</div>
+		</div>
+	</div>
 
-Tarif unique : 180  &euro;
+</div>
+</form>
