@@ -69,21 +69,13 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 				$billingAddress = $params['billingAddress'];
 				$paymentType = $params['payment'];
 
-				//Control and backup
-				$filter = array( array('property' => 'email', 'value' => $email));
-				$result = $this -> _paybox -> getList($filter);
+				$user = array('gender' => $gender, 'name' => $name, 'firstname' => $firstname, 'address' => $address, 'postalCode' => $postalCode, 'city' => $city, 'country' => $country, 'officeTelNumber' => $officeTelNumber, 'mobilePhoneNumber' => $mobilePhoneNumber, 'email' => $email, 'activity' => $activity, 'diploma' => $diploma, 'university' => $university, 'studentGraduationYear' => $studentGraduationYear, 'billingAddress' => $billingAddress, 'paymentType' => $paymentType, 'status' => 'nouveau', );
 
-				if (count($result['data']) == 0) {
-					$user = array('gender' => $gender, 'name' => $name, 'firstname' => $firstname, 'address' => $address, 'postalCode' => $postalCode, 'city' => $city, 'country' => $country, 'officeTelNumber' => $officeTelNumber, 'mobilePhoneNumber' => $mobilePhoneNumber, 'email' => $email, 'activity' => $activity, 'diploma' => $diploma, 'university' => $university, 'studentGraduationYear' => $studentGraduationYear, 'billingAddress' => $billingAddress, 'paymentType' => $paymentType, 'status' => 'nouveau', );
+				$result = $this -> _paybox -> create($user);
 
-					$result = $this -> _paybox -> create($user);
-
-					//Control and backup, then if it's ok
-					$this -> _session -> set('payboxUser', $result['data']);
-					$this -> _helper -> redirector -> gotoRoute(array('action' => 'payment'));
-				} else {
-					$this -> _helper -> redirector -> gotoRoute(array('action' => 'index'));
-				}
+				//Control and backup, then if it's ok
+				$this -> _session -> set('payboxUser', $result['data']);
+				$this -> _helper -> redirector -> gotoRoute(array('action' => 'payment'));
 			}
 		}
 

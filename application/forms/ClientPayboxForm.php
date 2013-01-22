@@ -8,7 +8,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		//$this->setAttrib('action', '/blocks/paybox/');
 		
 		//Modification du décorateur
-		$this->setDecorators(
+		/*$this->setDecorators(
 		    array(
 		        'FormElements',
 		        array('HtmlTag', array('tag' => 'table')),
@@ -23,11 +23,11 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		    array('HtmlTag', array('tag' => 'td')),
 		    array('Label', array('tag' => 'th')),
 		    array(array('tr' => 'HtmlTag'), array('tag' => 'tr'))
-		);
+		);*/
 
 		$this->addElement(	'select', 'gender', array(
             				'label'      	=> 'Titre :',
-            				'decorators' 	=> $decorateur,
+            				//'decorators' 	=> $decorateur,
             				'multiOptions'	=> array(
             					'mister' 	=> 'Monsieur', 
             					'madam' 	=> 'Madame',
@@ -36,7 +36,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 	
 		$this->addElement(	'text', 'name', array(
             				'label'      	=> 'Nom :',
-            				'decorators' 	=> $decorateur,
+            				//'decorators' 	=> $decorateur,
             				'required'  	=> true,
             				'validators' => array(
 				            	'alpha',
@@ -45,7 +45,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		
 		$this->addElement(	'text', 'firstname', array(
             				'label'      => 'Prénom :',
-            				'decorators' => $decorateur,
+            				//'decorators' => $decorateur,
             				'required'  	=> true,
             				'validators' => array(
 				            	'alpha',
@@ -54,7 +54,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		
 		$this->addElement(	'text', 'address', array(
             				'label'      => 'Adresse :',
-            				'decorators' => $decorateur,
+            				//'decorators' => $decorateur,
             				'required'  	=> true,
             				'validators' => array(
 				            	'alnum',
@@ -63,7 +63,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		
 		$this->addElement(	'text', 'postalCode', array(
             				'label'      => 'Code postale :',
-            				'decorators' => $decorateur,
+            				//'decorators' => $decorateur,
             				'required'  	=> true,
             				'validators' => array(
 				            	'digits',
@@ -72,7 +72,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 	
 		$this->addElement(	'text', 'city', array(
             				'label'      => 'Ville :',
-            				'decorators' => $decorateur,
+            				//'decorators' => $decorateur,
             				'required'  	=> true,
             				'validators' => array(
 				            	'alpha',
@@ -81,7 +81,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		
 		$this->addElement(	'text', 'country', array(
             				'label'      => 'Pays :',
-            				'decorators' => $decorateur,
+            				//'decorators' => $decorateur,
             				'required'  	=> true,
             				'validators' => array(
 				            	'alpha',
@@ -90,17 +90,17 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		
 		$this->addElement(	'text', 'officeTelNumber', array(
             				'label'      => 'Téléphone cabinet :',
-            				'decorators' => $decorateur,
+            				//'decorators' => $decorateur,
 		));
 		
 		$this->addElement(	'text', 'mobilePhoneNumber', array(
             				'label'      => 'Téléphone portable :',
-            				'decorators' => $decorateur,
+            				//'decorators' => $decorateur,
 		));
 		
 		$this->addElement(	'text', 'email', array(
             				'label'      => 'E-mail :',
-            				'decorators' => $decorateur,
+            				//'decorators' => $decorateur,
             				'required'  	=> true,
             				'validators' => array(
 				            	'EmailAddress',
@@ -109,7 +109,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		
 		$this->addElement(	'select', 'activity', array(
             				'label'      => 'Activité :',
-            				'decorators' => $decorateur,
+            				//'decorators' => $decorateur,
             				'multiOptions' => array(
             					'assitance dentaire' => 'Assistante Dentaire', 
             					'dentiste' => 'Dentiste',
@@ -118,7 +118,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		
 		$this->addElement(	'text', 'diploma', array(
             				'label'      => 'Diplôme :',
-            				'decorators' => $decorateur,
+            				//'decorators' => $decorateur,
             				'validators' => array(
 				            	'alnum',
 				            )
@@ -127,7 +127,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		
 		$this->addElement(	'text', 'student', array(
             				'label'      => 'Si vous êtes étudiant, nom de la faculté :',
-            				'decorators' => $decorateur,
+            				//'decorators' => $decorateur,
             				'validators' => array(
 				            	'alnum',
 				            )
@@ -135,7 +135,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		
 		$this->addElement(	'text', 'studentGraduationYear', array(
             				'label'      => 'Année suivie :',
-            				'decorators' => $decorateur,
+            				//'decorators' => $decorateur,
             				'validators' => array(
 				            	'digits',
 				            )
@@ -143,22 +143,30 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		
 		$this->addElement(	'checkbox', 'billingAddress', array(
             				'label'      => 'Merci de cocher cette case si l\'adresse de facturation est différente de celle renseignée ci-dessus',
-            				'decorators' => $decorateur,
+            				//'decorators' => $decorateur,
 		));
 		
 		$this->addElement(	'radio', 'payment', array(
-            				'decorators' => $decorateur,
+            				//'decorators' => $decorateur,
             				'multiOptions' => array('card' => 'Paiement en ligne', 'check' => 'Chèque')
 		));
 
 		$this->addElement('submit', 'submit', array(
             'label'    => 'Valider',
             'name'	   => 'submit',
-            'decorators' => array(
+            /*'decorators' => array(
 	            'ViewHelper',
 	            array(array('td' => 'HtmlTag'), array('tag' => 'td', 'colspan' => 2)),
 	            array(array('tr' => 'HtmlTag'), array('tag' => 'tr'))
-	        ),
+	        ),*/
         ));
+		
+		foreach($this->getElements() as $element) 
+        {
+            $element->removeDecorator('HtmlTag');
+            $element->removeDecorator('DtDdWrapper');
+            $element->removeDecorator('Label');
+			$element->removeDecorator('Errors');
+        }
     }
 }
