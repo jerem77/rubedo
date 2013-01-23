@@ -17,6 +17,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 	
 		$this->addElement(	'text', 'name', array(
             				'required'  	=> true,
+            				'allowWhiteSpace' => true,
             				'validators' => array(
 				            	'alpha',
 				            )
@@ -24,6 +25,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		
 		$this->addElement(	'text', 'firstname', array(
             				'required'  	=> true,
+            				'allowWhiteSpace' => true,
             				'validators' => array(
 				            	'alpha',
 				            )
@@ -31,6 +33,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		
 		$this->addElement(	'text', 'address', array(
             				'required'  	=> true,
+            				'allowWhiteSpace' => true,
             				'validators' => array(
 				            	'alnum',
 				            )
@@ -45,6 +48,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 	
 		$this->addElement(	'text', 'city', array(
             				'required'  	=> true,
+            				'allowWhiteSpace' => true,
             				'validators' => array(
 				            	'alpha',
 				            )
@@ -52,15 +56,24 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		
 		$this->addElement(	'text', 'country', array(
             				'required'  	=> true,
+            				'allowWhiteSpace' => true,
             				'validators' => array(
 				            	'alpha',
 				            )
 		));
 		
 		$this->addElement(	'text', 'officeTelNumber', array(
+							'allowWhiteSpace' => true,
+							'validators' => array(
+				            	'digits',
+				            )
 		));
 		
 		$this->addElement(	'text', 'mobilePhoneNumber', array(
+		'allowWhiteSpace' => true,
+							'validators' => array(
+				            	'digits',
+				            )
 		));
 		
 		$this->addElement(	'text', 'email', array(
@@ -82,6 +95,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		));
 		
 		$this->addElement(	'text', 'student', array(
+							'allowWhiteSpace' => true,
             				'validators' => array(
 				            	'alnum',
 				            )
