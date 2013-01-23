@@ -457,6 +457,10 @@ html>/**/body #footer-bar
  * 
  */
 
+td {
+	vertical-align: top;
+}
+
 #gender, #activity {
 	width: 48.5%;
 }
