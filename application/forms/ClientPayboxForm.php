@@ -47,14 +47,12 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		$this->addElement($country);
 		
 		$officeTelNumber = new Zend_Form_Element_Text('officeTelNumber');
-		$officeTelNumber	->setRequired(true)
-		          			->setAutoInsertNotEmptyValidator(false)
+		$officeTelNumber	->setAutoInsertNotEmptyValidator(false)
 		          			->addValidator('Digits');
 		$this->addElement($officeTelNumber);
 		
 		$mobilePhoneNumber = new Zend_Form_Element_Text('mobilePhoneNumber');
-		$mobilePhoneNumber	->setRequired(true)
-		          			->setAutoInsertNotEmptyValidator(false)
+		$mobilePhoneNumber	->setAutoInsertNotEmptyValidator(false)
 		          			->addValidator('Digits');
 		$this->addElement($mobilePhoneNumber);
 		
