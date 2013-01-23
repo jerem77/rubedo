@@ -92,20 +92,34 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 		$serverUrl = $this -> getRequest() -> getScheme() . '://' . $this -> getRequest() -> getHttpHost();
 
 		$params = array(
-		//mode d'appel
-		'PBX_MODE' => '1',
-		//identification
-		'PBX_SITE' => '0983514', 'PBX_RANG' => '01', 'PBX_IDENTIFIANT' => '354677877',
-		//gestion de la page de connection : paramétrage "invisible"
-		'PBX_WAIT' => '0', 'PBX_BOUTPI' => "nul", 'PBX_BKGD' => "white",
-		//informations paiement (appel)
-		'PBX_TOTAL' => '00001', 'PBX_DEVISE' => '978', 'PBX_CMD' => (string)rand(1, 10000), 'PBX_PORTEUR' => "mickael.goncalves@webtales.fr",
-		//informations nécessaires aux traitements (réponse)
-		'PBX_RETOUR' => "montant:M;maref:R;auto:A;trans:T;abonnement:B ;paiement:P;carte:C;idtrans:S;pays:Y;erreur:E;validite:D;PPPS:U;IP:I;BIN6:N;digest:H;sign:K", 'PBX_EFFECTUE' => $serverUrl . $this -> _helper -> url -> url(array('action' => 'done', 'controller' => $controller, 'module' => $module), null, true), 'PBX_REFUSE' => $serverUrl . $this -> _helper -> url -> url(array('action' => 'refused', 'controller' => $controller, 'module' => $module), null, true), 'PBX_ANNULE' => $serverUrl . $this -> _helper -> url -> url(array('action' => 'canceled', 'controller' => $controller, 'module' => $module), null, true), 'PBX_REPONDRE_A' => $serverUrl . $this -> _helper -> url -> url(array('action' => 'back-payment', 'controller' => $controller, 'module' => $module), null, true),
-		//page en cas d'erreur
-		'PBX_ERREUR' => $serverUrl . $this -> _helper -> url -> url(array('action' => 'error', 'controller' => $controller, 'module' => $module), null, true),
-		//en plus
-		'PBX_TYPECARTE' => "CB", 'PBX_LANGUE' => "FRA", );
+			//mode d'appel
+			'PBX_MODE' => '1',
+			//identification
+			'PBX_SITE' => '0983514', 
+			'PBX_RANG' => '01', 
+			'PBX_IDENTIFIANT' => '354677877',
+			//gestion de la page de connection : paramétrage "invisible"
+			'PBX_WAIT' => '0', 
+			'PBX_BOUTPI' => "nul", 
+			'PBX_BKGD' => "white",
+			//informations paiement (appel)
+			'PBX_TOTAL' => '00001', 
+			'PBX_DEVISE' => '978', 
+			'PBX_CMD' => (string)rand(1, 10000), 
+			'PBX_PORTEUR' => "mickael.goncalves@webtales.fr",
+			//informations nécessaires aux traitements (réponse)
+			'PBX_RETOUR' => "montant:M;maref:R;auto:A;trans:T;paiement:P;carte:C;idtrans:S;pays:Y;erreur:E;validite:D;IP:I;BIN6:N;digest:H;sign:K", 
+			'PBX_EFFECTUE' => $serverUrl . $this -> _helper -> url -> url(array('action' => 'done', 'controller' => $controller, 'module' => $module), null, true), 
+			'PBX_REFUSE' => $serverUrl . $this -> _helper -> url -> url(array('action' => 'refused', 'controller' => $controller, 'module' => $module), null, true), 
+			'PBX_ANNULE' => $serverUrl . $this -> _helper -> url -> url(array('action' => 'canceled', 'controller' => $controller, 'module' => $module), null, true), 
+			'PBX_REPONDRE_A' => "www.journees-zimmerdental.fr/blocks/paybox/back-payment",
+			'PBX_PAYBOX' => "https://preprod-tpeweb.paybox.com/cgi/MYpagepaiement.cgi",
+			//page en cas d'erreur
+			'PBX_ERREUR' => $serverUrl . $this -> _helper -> url -> url(array('action' => 'error', 'controller' => $controller, 'module' => $module), null, true),
+			//en plus
+			'PBX_TYPECARTE' => "CB", 
+			'PBX_LANGUE' => "FRA", 
+		);
 
 		foreach ($params as $key => $value) {
 			$queryStringArray[] = "$key=$value";
