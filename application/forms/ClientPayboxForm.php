@@ -129,7 +129,6 @@ class Application_Form_ClientPayboxForm extends Zend_Form
             $element->removeDecorator('HtmlTag');
             $element->removeDecorator('DtDdWrapper');
             $element->removeDecorator('Label');
-			$element->removeDecorator('Errors');
         }
     }
 }
