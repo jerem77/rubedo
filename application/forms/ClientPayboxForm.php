@@ -4,125 +4,89 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 {
     public function init()
     {
-       	$this->setMethod('post');
+       	$this->setMethod('post' );
 
-		$this->addElement(	'select', 'gender', array(
-            				'multiOptions'	=> array(
-            					'docteur'		=> 'Docteur',
-            					'madame' 		=> 'Madame',
-            					'monsieur' 		=> 'Monsieur', 
-            					'professeur' 	=> 'Professeur',
-							)
-		));
-	
-		$this->addElement(	'text', 'name', array(
-            				'required'  	=> true,
-            				'allowWhiteSpace' => true,
-            				'validators' => array(
-				            	'alpha',
-				            )
-		));
-		
-		$this->addElement(	'text', 'firstname', array(
-            				'required'  	=> true,
-            				'allowWhiteSpace' => true,
-            				'validators' => array(
-				            	'alpha',
-				            )
-		));
-		
-		$this->addElement(	'text', 'address', array(
-            				'required'  	=> true,
-            				'allowWhiteSpace' => true,
-            				'validators' => array(
-				            	'alnum',
-				            )
-		));
-		
-		$this->addElement(	'text', 'postalCode', array(
-            				'required'  	=> true,
-            				'validators' => array(
-				            	'digits',
-				            )
-		));
-	
-		$this->addElement(	'text', 'city', array(
-            				'required'  	=> true,
-            				'allowWhiteSpace' => true,
-            				'validators' => array(
-				            	'alpha',
-				            )
-		));
-		
-		$this->addElement(	'text', 'country', array(
-            				'required'  	=> true,
-            				'allowWhiteSpace' => true,
-            				'validators' => array(
-				            	'alpha',
-				            )
-		));
-		
-		$this->addElement(	'text', 'officeTelNumber', array(
-							'allowWhiteSpace' => true,
-							'validators' => array(
-				            	'digits',
-				            )
-		));
-		
-		$this->addElement(	'text', 'mobilePhoneNumber', array(
-		'allowWhiteSpace' => true,
-							'validators' => array(
-				            	'digits',
-				            )
-		));
-		
-		$this->addElement(	'text', 'email', array(
-            				'required'  	=> true,
-            				'validators' => array(
-				            	'EmailAddress',
-				            )
-		));
-		
-		$this->addElement(	'select', 'activity', array(
-            				'multiOptions' => array(
-            					'assitante dentaire' 		=> 'Assistante Dentaire', 
-            					'chirurgien maxillo-facial' => 'Chirurgien Maxillo-facial',
-            					'etudiant' 					=> 'Etudiant',
-            					'implantologiste' 			=> 'Implantologiste',
-            					'omnipraticien'				=> 'Omnipraticien',
-            					'parodontologiste'			=> 'Parodontologiste',
-							)
-		));
-		
-		$this->addElement(	'text', 'student', array(
-							'allowWhiteSpace' => true,
-            				'validators' => array(
-				            	'alnum',
-				            )
-		));
-		
-		$this->addElement(	'select', 'studentGraduationYear', array(
-            				'multiOptions' => array(
-            					'5ème année'	=> '5ème année', 
-            					'6ème année'	=> '6ème année',
-							)
-		));
-		
-		$this->addElement(	'checkbox', 'billingAddress', array());
-		
-		$this->addElement(	'radio', 'payment', array(
-							'required'		=> true,
-            				'multiOptions' 	=> array(
-            					'card' => 'Paiement en ligne',
-            					'check' => 'Chèque'
-							),
-							'value'			=> 'card',
-		));
+		$gender = new Zend_Form_Element_Select('gender');
+		$gender	->addMultiOptions(array('docteur'=> 'Docteur', 'madame'=> 'Madame', 'monsieur'=> 'Monsieur', 'professeur'=> 'Professeur',));
+		$this->addElement($gender);
 
-		$this->addElement('submit', 'submit', array(
-            'label'    => 'Valider',
-            'name'	   => 'submit',
-        ));
+		$name = new Zend_Form_Element_Text('name');
+		$name	->setRequired(true)
+		       	->setAutoInsertNotEmptyValidator(false)
+		       	->addValidator('Alpha', false, array('allowWhiteSpace' => true));
+		$this->addElement($name);
+		
+		$firstname = new Zend_Form_Element_Text('firstname');
+		$firstname	->setRequired(true)
+		          	->setAutoInsertNotEmptyValidator(false)
+		          	->addValidator('Alpha', false, array('allowWhiteSpace' => true));
+		$this->addElement($firstname);
+		
+		$address = new Zend_Form_Element_Text('address');
+		$address	->setRequired(true)
+		          	->setAutoInsertNotEmptyValidator(false)
+		          	->addValidator('Alnum', false, array('allowWhiteSpace' => true));
+		$this->addElement($address);
+		
+		$postalCode = new Zend_Form_Element_Text('postalCode');
+		$postalCode	->setRequired(true)
+		          	->setAutoInsertNotEmptyValidator(false)
+		          	->addValidator('Digits', false, array('allowWhiteSpace' => true));
+		$this->addElement($postalCode);
+	
+		$city = new Zend_Form_Element_Text('city');
+		$city	->setRequired(true)
+		          	->setAutoInsertNotEmptyValidator(false)
+		          	->addValidator('Alpha', false, array('allowWhiteSpace' => true));
+		$this->addElement($city);
+		
+		$country = new Zend_Form_Element_Text('country');
+		$country	->setRequired(true)
+		          	->setAutoInsertNotEmptyValidator(false)
+		          	->addValidator('Alpha', false, array('allowWhiteSpace' => true));
+		$this->addElement($country);
+		
+		$officeTelNumber = new Zend_Form_Element_Text('officeTelNumber');
+		$officeTelNumber	->setAutoInsertNotEmptyValidator(false)
+		          			->addValidator('Digits');
+		$this->addElement($officeTelNumber);
+		
+		$mobilePhoneNumber = new Zend_Form_Element_Text('mobilePhoneNumber');
+		$mobilePhoneNumber	->setAutoInsertNotEmptyValidator(false)
+		          			->addValidator('Digits');
+		$this->addElement($mobilePhoneNumber);
+		
+		$email = new Zend_Form_Element_Text('email');
+		$email	->setRequired(true)
+		        ->setAutoInsertNotEmptyValidator(false)
+		        ->addValidator('EmailAddress', false, array('allowWhiteSpace' => true));
+		$this->addElement($email);
+		
+		$activity = new Zend_Form_Element_Select('activity' );
+		$activity	->addMultiOptions(array('assitante dentaire'=>'Assistante Dentaire','chirurgien maxillo-facial'=>'Chirurgien Maxillo-facial','etudiant'=>'Etudiant','implantologiste'=>'Implantologiste','omnipraticien'=>'Omnipraticien','parodontologiste'=>'Parodontologiste',));
+		$this->addElement($activity);
+		
+		$student = new Zend_Form_Element_Text('student');
+		$student	->setAutoInsertNotEmptyValidator(false)
+		        	->addValidator('Alnum', false, array('allowWhiteSpace' => true));
+		$this->addElement($student);
+		
+		$studentGraduationYear = new Zend_Form_Element_Select('studentGraduationYear' );
+		$studentGraduationYear	->addMultiOptions(array('5ème année'=>'5ème année','6ème année'	=> '6ème année',));
+		$this->addElement($studentGraduationYear);
+		
+		$billingAddress = new Zend_Form_Element_Checkbox('billingAddress');
+		$this->addElement($billingAddress);
+		
+		$payment = new Zend_Form_Element_Radio('payment');
+		$payment	-> addMultiOptions(array('card' => 'Paiement en ligne',	'check' => 'Chèque'))
+					-> setValue('card');
+		$this->addElement($payment);
+		
+		$submit = new Zend_Form_Element_Submit('submit');
+		$submit -> setLabel('Valider')
+				-> setName('submit');
+		$this->addElement($submit);
 		
 		foreach($this->getElements() as $element) 
         {
