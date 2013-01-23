@@ -132,16 +132,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 	}
 
 	public function refusedAction() {
-		$sessionUser = $this -> _session -> get('payboxUser', '');
-		$user = $this -> _paybox -> findById($sessionUser['id']);
-
-		if (count($user) > 0) {
-			$sessionUser['status'] = 'refuse';
-
-			$this -> _paybox -> update($sessionUser);
-
-			$this -> _session -> set('payboxUser', null);
-		}
+		$this -> _session -> set('payboxUser', null);
 
 		$controller = $this -> getRequest() -> getControllerName();
 		$module = $this -> getRequest() -> getModuleName();
@@ -153,16 +144,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 	}
 
 	public function canceledAction() {
-		$sessionUser = $this -> _session -> get('payboxUser', '');
-		$user = $this -> _paybox -> findById($sessionUser['id']);
-
-		if (count($user) > 0) {
-			$sessionUser['status'] = 'annule';
-
-			$this -> _paybox -> update($sessionUser);
-
-			$this -> _session -> set('payboxUser', null);
-		}
+		$this -> _session -> set('payboxUser', null);
 
 		$controller = $this -> getRequest() -> getControllerName();
 		$module = $this -> getRequest() -> getModuleName();
@@ -174,16 +156,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 	}
 
 	public function errorAction() {
-		$sessionUser = $this -> _session -> get('payboxUser', '');
-		$user = $this -> _paybox -> findById($sessionUser['id']);
-
-		if (count($user) > 0) {
-			$sessionUser['status'] = 'erreur';
-
-			$this -> _paybox -> update($sessionUser);
-
-			$this -> _session -> set('payboxUser', null);
-		}
+		$this -> _session -> set('payboxUser', null);
 
 		$controller = $this -> getRequest() -> getControllerName();
 		$module = $this -> getRequest() -> getModuleName();
@@ -210,48 +183,67 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 		$url = substr($url, 0, $pos);
 
 		$amount = "00001";
+		
+		$sessionUser = $this -> _session -> get('payboxUser', '');
 
-		if (isset($params['auto']) && isset($params['erreur']) && isset($params['sign']) && isset($params['montant'])) {
-			if ($params['erreur'] == "00000") {
-				if ($amount == $params['montant']) {
-					$file = fopen(APPLICATION_PATH . "/../data/paybox/pubkey.pem", "r");
-					$pubkey = fread($file, 1024);
-					fclose($file);
-
-					$sign = $params['sign'];
-					$sign = urldecode($sign);
-					$sign = base64_decode($sign);
-					$result = openssl_verify($url, $sign, $pubkey);
-
-					if ($result == 1) {
-						$sessionUser = $this -> _session -> get('payboxUser', '');
-
-						$filter = array('email' => $sessionUser['email']);
-						$user = $this -> _paybox -> customFind($filter);
-
-						if (count($user) == 1) {
+		$filter = array('email' => $sessionUser['email']);
+		$user = $this -> _paybox -> customFind($filter);
+		if (count($user) == 1) {
+			if (isset($params['auto']) && isset($params['erreur']) && isset($params['sign']) && isset($params['montant'])) {
+				if ($params['erreur'] == "00000") {
+					if ($amount == $params['montant']) {
+						$file = fopen(APPLICATION_PATH . "/../data/paybox/pubkey.pem", "r");
+						$pubkey = fread($file, 1024);
+						fclose($file);
+	
+						$sign = $params['sign'];
+						$sign = urldecode($sign);
+						$sign = base64_decode($sign);
+						$result = openssl_verify($url, $sign, $pubkey);
+	
+						if ($result == 1) {
 							$user['paymentRef'] = $params['maref'];
 							$user['authorizationNumber'] = $params['auto'];
 							$user['transactionId'] = $params['trans'];
-							$user['status'] = 'paid';
-
+							$user['status'] = 'paye';
+	
 							$this -> _paybox -> update($user);
-
+	
 							$this -> _session -> set('payboxUSer', null);
 						} else {
-							$this -> getResponse() -> setHttpResponseCode(500);
+							$user['status'] = 'url et signature differents';
+							$this -> _paybox -> update($user);
+							$this -> _session -> set('payboxUSer', null);
+							
+							$this -> getResponse() -> setHttpResponseCode(400);
 						}
 					} else {
-						$this -> getResponse() -> setHttpResponseCode(400);
+						$user['status'] = 'le montant ne correspond pas';
+						$this -> _paybox -> update($user);
+						$this -> _session -> set('payboxUSer', null);
+							
+						$this -> getResponse() -> setHttpResponseCode(500);
 					}
 				} else {
+					$user['status'] = 'erreur CGI';
+					$this -> _paybox -> update($user);
+					$this -> _session -> set('payboxUSer', null);
+					
 					$this -> getResponse() -> setHttpResponseCode(500);
 				}
 			} else {
-				$this -> getResponse() -> setHttpResponseCode(500);
+				$user['status'] = 'parametres manquants dans la requete';
+				$this -> _paybox -> update($user);
+				$this -> _session -> set('payboxUSer', null);
+					
+				$this -> getResponse() -> setHttpResponseCode(405);
 			}
 		} else {
-			$this -> getResponse() -> setHttpResponseCode(405);
+			$user['status'] = 'utilisateur innexistant';
+			$this -> _paybox -> update($user);
+			$this -> _session -> set('payboxUSer', null);
+			
+			$this -> getResponse() -> setHttpResponseCode(500);
 		}
 	}
 
