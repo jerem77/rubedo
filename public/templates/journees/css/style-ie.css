@@ -393,6 +393,10 @@ background-image: url('../images/headerLogo.png');
 	height:101px !important;
 	margin-left:20px !important;
 }
+.info
+{
+	margin-left:20px;
+}
 /*
  * 
  * Invite d'honneur
@@ -426,4 +430,8 @@ background-image: url('../images/headerLogo.png');
 	width:940px;
 	height:700px;
 	background-position: 100px 50px;
+}
+.label{
+	display:block;
+	right:20px !important;
 }
