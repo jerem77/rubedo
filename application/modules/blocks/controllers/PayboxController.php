@@ -36,7 +36,6 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 	}
 
 	public function indexAction() {
-
 		$translator = new Zend_Translate( array('adapter' => 'array', 'content' => APPLICATION_PATH.'/../vendor/bombayworks/zendframework1/resources/languages', 'locale' => 'fr', 'scan' => Zend_Translate::LOCALE_DIRECTORY));
 
 		$paybox = new Application_Form_ClientPayboxForm;
@@ -47,6 +46,11 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 		$this -> view -> paybox = $paybox;
 
 		$request = $this -> getRequest();
+		
+		if($this->_session->get('error', '') != ""){
+			$this->view->error = $this->_session->get('error');
+			$this->_session->set('error', null);
+		}
 
 		if ($request -> isPost()) {
 			if ($paybox -> isValid($request -> getPost())) {
@@ -72,14 +76,28 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 				if($university == ""){
 					$studentGraduationYear = "";
 				}
-
-				$user = array('gender' => $gender, 'name' => $name, 'firstname' => $firstname, 'address' => $address, 'postalCode' => $postalCode, 'city' => $city, 'country' => $country, 'officeTelNumber' => $officeTelNumber, 'mobilePhoneNumber' => $mobilePhoneNumber, 'email' => $email, 'activity' => $activity, 'diploma' => $diploma, 'university' => $university, 'studentGraduationYear' => $studentGraduationYear, 'billingAddress' => $billingAddress, 'paymentType' => $paymentType, 'status' => 'nouveau', );
-
-				$result = $this -> _paybox -> create($user);
-
-				//Control and backup, then if it's ok
-				$this -> _session -> set('payboxUser', $result['data']);
-				$this -> _helper -> redirector -> gotoRoute(array('action' => 'payment'));
+				
+				$result = $this->_paybox->getList(array(array('property' => 'email', 'value' => $email), array('property' => 'status', 'value' => 'payé')));
+				if(count($result['data'])==0){
+					if($paymentType=="card"){
+						$user = array('gender' => $gender, 'name' => $name, 'firstname' => $firstname, 'address' => $address, 'postalCode' => $postalCode, 'city' => $city, 'country' => $country, 'officeTelNumber' => $officeTelNumber, 'mobilePhoneNumber' => $mobilePhoneNumber, 'email' => $email, 'activity' => $activity, 'diploma' => $diploma, 'university' => $university, 'studentGraduationYear' => $studentGraduationYear, 'billingAddress' => $billingAddress, 'paymentType' => $paymentType, 'status' => 'nouveau', );
+		
+						$result = $this -> _paybox -> create($user);
+		
+						//Control and backup, then if it's ok
+						$this -> _session -> set('payboxUser', $result['data']);
+						$this -> _helper -> redirector -> gotoRoute(array('action' => 'payment'));
+					} else {
+						$user = array('gender' => $gender, 'name' => $name, 'firstname' => $firstname, 'address' => $address, 'postalCode' => $postalCode, 'city' => $city, 'country' => $country, 'officeTelNumber' => $officeTelNumber, 'mobilePhoneNumber' => $mobilePhoneNumber, 'email' => $email, 'activity' => $activity, 'diploma' => $diploma, 'university' => $university, 'studentGraduationYear' => $studentGraduationYear, 'billingAddress' => $billingAddress, 'paymentType' => $paymentType, 'status' => 'paiement par chéque', );
+		
+						$result = $this -> _paybox -> create($user);
+						
+						$this -> _helper -> redirector -> gotoRoute(array('action' => 'check'));
+					}
+				} else {
+					$this->_session->set('error', 'Adresse e-mail déja utilisée');
+					$this -> _helper -> redirector -> gotoRoute(array('action' => 'index'));
+				}
 			}
 		}
 
@@ -90,7 +108,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 		$module = $this -> getRequest() -> getModuleName();
 
 		$serverUrl = $this -> getRequest() -> getScheme() . '://' . $this -> getRequest() -> getHttpHost();
-
+		$ref = new MongoId();
 		$params = array(
 			//mode d'appel
 			'PBX_MODE' => '1',
@@ -105,7 +123,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 			//informations paiement (appel)
 			'PBX_TOTAL' => '00001', 
 			'PBX_DEVISE' => '978', 
-			'PBX_CMD' => (string)rand(1, 10000), 
+			'PBX_CMD' => (string)$ref, 
 			'PBX_PORTEUR' => "mickael.goncalves@webtales.fr",
 			//informations nécessaires aux traitements (réponse)
 			'PBX_RETOUR' => "montant:M;maref:R;auto:A;trans:T;paiement:P;carte:C;idtrans:S;pays:Y;erreur:E;validite:D;IP:I;BIN6:N;digest:H;sign:K", 
@@ -136,16 +154,18 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 	}
 
 	public function doneAction() {
-		$sessionUser = $this -> _session -> get('payboxUser', '');
-  	
-    	$user = $this -> _paybox -> findById($sessionUser['id']);
-  	
-    	if (count($user) > 0) {
-      		$sessionUser['status'] = 'payé';
-     		$this -> _paybox -> update($sessionUser);
-	  
-    		$this -> _session -> set('payboxUser', null);
+		if($this->_session->get('payboxUSer', '') != ""){
+			$sessionUser = $this -> _session -> get('payboxUser', '');
 	  	
+	    	$user = $this -> _paybox -> findById($sessionUser['id']);
+	  	
+	    	if (count($user) > 0) {
+	      		$sessionUser['status'] = 'payé';
+	     		$this -> _paybox -> update($sessionUser);
+		  
+	    		$this -> _session -> set('payboxUser', null);
+		  	
+			}
 		}
 		
 		$controller = $this -> getRequest() -> getControllerName();
@@ -158,16 +178,18 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 	}
 
 	public function refusedAction() {
-		$sessionUser = $this -> _session -> get('payboxUser', '');
-  	
-    	$user = $this -> _paybox -> findById($sessionUser['id']);
-  	
-    	if (count($user) > 0) {
-      		$sessionUser['status'] = 'paiement refusé';
-     		$this -> _paybox -> update($sessionUser);
-	  
-    		$this -> _session -> set('payboxUser', null);
+		if($this->_session->get('payboxUSer', '') != ""){
+			$sessionUser = $this -> _session -> get('payboxUser', '');
 	  	
+	    	$user = $this -> _paybox -> findById($sessionUser['id']);
+	  	
+	    	if (count($user) > 0) {
+	      		$sessionUser['status'] = 'paiement refusé';
+	     		$this -> _paybox -> update($sessionUser);
+		  
+	    		$this -> _session -> set('payboxUser', null);
+		  	
+			}
 		}
 
 		$controller = $this -> getRequest() -> getControllerName();
@@ -180,16 +202,18 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 	}
 
 	public function canceledAction() {
-		$sessionUser = $this -> _session -> get('payboxUser', '');
-  	
-    	$user = $this -> _paybox -> findById($sessionUser['id']);
-  	
-    	if (count($user) > 0) {
-      		$sessionUser['status'] = 'paiement annulé';
-     		$this -> _paybox -> update($sessionUser);
-	  
-    		$this -> _session -> set('payboxUser', null);
+		if($this->_session->get('payboxUSer', '') != ""){
+			$sessionUser = $this -> _session -> get('payboxUser', '');
+	  		
+	    	$user = $this -> _paybox -> findById($sessionUser['id']);
 	  	
+	    	if (count($user) > 0) {
+	      		$sessionUser['status'] = 'paiement annulé';
+	     		$this -> _paybox -> update($sessionUser);
+		  
+	    		$this -> _session -> set('payboxUser', null);
+		  	
+			}
 		}
 
 		$controller = $this -> getRequest() -> getControllerName();
@@ -202,16 +226,18 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 	}
 
 	public function errorAction() {
-		$sessionUser = $this -> _session -> get('payboxUser', '');
-  	
-    	$user = $this -> _paybox -> findById($sessionUser['id']);
-  	
-    	if (count($user) > 0) {
-      		$sessionUser['status'] = 'erreur lors du paiement';
-     		$this -> _paybox -> update($sessionUser);
-	  
-    		$this -> _session -> set('payboxUser', null);
+		if($this->_session->get('payboxUSer', '') != ""){
+			$sessionUser = $this -> _session -> get('payboxUser', '');
 	  	
+	    	$user = $this -> _paybox -> findById($sessionUser['id']);
+	  	
+	    	if (count($user) > 0) {
+	      		$sessionUser['status'] = 'erreur lors du paiement';
+	     		$this -> _paybox -> update($sessionUser);
+		  
+	    		$this -> _session -> set('payboxUser', null);
+		  	
+			}
 		}
 
 		$controller = $this -> getRequest() -> getControllerName();
@@ -301,6 +327,16 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 			
 			$this -> getResponse() -> setHttpResponseCode(500);
 		}
+	}
+
+	public function checkAction() {
+		$controller = $this -> getRequest() -> getControllerName();
+		$module = $this -> getRequest() -> getModuleName();
+
+		$serverUrl = $this -> getRequest() -> getScheme() . '://' . $this -> getRequest() -> getHttpHost();
+		$serverUrl .= $this -> _helper -> url -> url(array('action' => 'index', 'controller' => $controller, 'module' => $module), null, true);
+
+		$this -> view -> url = $serverUrl;
 	}
 
 }
