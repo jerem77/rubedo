@@ -9,13 +9,13 @@
 		"twig/extensions": "v1.0.0-alpha",
         "ruflin/Elastica": "v0.19.8.0",
         "ezyang/htmlpurifier": "dev-master",
-        "webtales/rubedo-backoffice-ui" : "dev-master",
+        "webtales/rubedo-backoffice-ui" : "dev-suez",
         "bombayworks/zendframework1": "v1.12.1",
         "alb/oembed": "1.0.0"
     },
     "require-dev": {
         "chriskite/phactory": "v0.4.2",
-        "webtales/rubedoData" : "dev-master"
+        "webtales/rubedoData" : "dev-suez"
     },
     "repositories": [
 		{
