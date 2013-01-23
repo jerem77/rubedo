@@ -450,3 +450,48 @@ html>/**/body #footer-bar
 	height:700px;
 	background-position: 100px 50px;
 }
+
+/**
+ * 	
+ * 	Page d'inscription
+ * 
+ */
+
+#gender, #activity {
+	width: 48.5%;
+}
+
+#name, #firstname, #officeTelNumber, #mobilePhoneNumber, #student {
+	width: 95%;
+}
+
+#address {
+	width: 97.5%;
+}
+
+#postalCode, #city, #country {
+	width: 93%;
+}
+
+#email {
+	width: 47.5%;
+}
+
+#studentGraduationYear {
+	width: 96%;
+}
+
+#submit {
+	float:right;
+	width: 65px;
+	margin-right:30px;
+	background-color:#656565;
+	border:0px; color:#FFFFFF;
+	white-space:70px;
+	height:20px;
+	font-weight:bold;
+}
+
+.radioGroup label {
+	display:inline;
+}

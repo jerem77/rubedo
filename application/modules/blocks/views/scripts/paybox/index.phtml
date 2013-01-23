@@ -15,7 +15,6 @@
 			<div class="span6" style="font-weight:bold;">
 				INFORMATIONS PERSONNELLES
 			</div>
-			<span class="span1" > Fleche Bas</span>
 		</div>
 		<!-- eventuellement du JS pour slideDown le menu -->
 		<div class="row" id="infoinscrip" style="margin-top:15px; margin-left:5px; padding:10px 0px 10px 0px; border-top:1px ridge; border-bottom:1px ridge;">
@@ -24,86 +23,78 @@
 					<tr>
 						<td colspan="6">
 							<label style="font-weight:bold;color:#008AC2;">Titre : </label>
-							<select style="width:48.5%">
-								<option>Monsieur</option>
-								<option>Madame</option>
-							</select>
+							<?php echo $this->paybox->gender; ?>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="3">
 							<label style="font-weight:bold;color:#008AC2;">Nom* :</label>
-							<input style="width:95%" type="text" />
+							<?php echo $this->paybox->name; ?>
 						</td>
 						<td colspan="3">
 							<label style="font-weight:bold;color:#008AC2;">Prenom* :</label>
-							<input style="width:95%" type="text" />
+							<?php echo $this->paybox->firstname; ?>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="6">
 							<label style="font-weight:bold;color:#008AC2;">Adresse* :</label>
-							<input type="text" style="width:97.5%;"/>
+							<?php echo $this->paybox->address; ?>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="2">
 							<label style="font-weight:bold;color:#008AC2;">Code Postal* :</label>
-							<input style="width:93%" type="text" />
+							<?php echo $this->paybox->postalCode; ?>
 						</td>
 						<td colspan="2">
 							<label style="font-weight:bold;color:#008AC2;">Ville* :</label>
-							<input style="width:93%" type="text" />
+							<?php echo $this->paybox->city; ?>
 						</td>
 						<td colspan="2">
 							<label style="font-weight:bold;color:#008AC2;">Pays* :</label>
-							<input style="width:93%" type="text" />
+							<?php echo $this->paybox->country; ?>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="3">
 							<label style="font-weight:bold;color:#008AC2;">Téléphone Cabinet :</label>
-							<input style="width:95%" type="text" />
+							<?php echo $this->paybox->officeTelNumber; ?>
 						</td>
 						<td colspan="3">
 							<label style="font-weight:bold;color:#008AC2;">Téléphone Portable :</label>
-							<input style="width:95%" type="text" />
+							<?php echo $this->paybox->mobilePhoneNumber; ?>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="6">
 							<label style="font-weight:bold;color:#008AC2;">E-mail* :</label>
-							<input style="width:47.5%" type="text" />
+							<?php echo $this->paybox->email; ?>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="6">
 							<label style="font-weight:bold;color:#008AC2;">Activité :</label>
-							<input style="width:47.5%" type="text" />
-						</td>
-					</tr>
-					<tr>
-						<td colspan="6">
-							<label style="font-weight:bold;color:#008AC2;">Diplôme :</label>
-							<input style="width:47.5%" type="text" />
+							<?php echo $this->paybox->activity; ?>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="3">
 							<label style="font-weight:bold;color:#008AC2;">Si vous êtes étudiants, nom de la faculté </label>
-							<input style="width:95%" type="text" />
+							<?php echo $this->paybox->student; ?>
 						</td>
 						<td colspan="3">
 							<label style="font-weight:bold;color:#008AC2;">Année suivie </label>
-							<input style="width:95%" type="text" />
+							<?php echo $this->paybox->studentGraduationYear; ?>
 						</td>
 					</tr>
 					<tr>
-						<td colspan="6"><input type="checkbox" /> Merci de cocher cette case si l'adresse de facturation diffère de celle renseignée ci-dessus.</td>
+						<td colspan="6"><?php echo $this->paybox->billingAddress; ?> Merci de cocher cette case si l'adresse de facturation diffère de celle renseignée ci-dessus.</td>
 					</tr>
 					<tr>
-						<td colspan="6"><input type="submit" style=" float:right; margin-right:30px; background-color:#656565; border:0px; color:#FFFFFF; width:70px; height:20px; font-weight:bold;" />
-							<div class="end" style=" float:right; margin-right:-80px; background-color: #656565; width:20px; height:20px;"></div></td>
+						<td colspan="6" style="padding-top:10px;">
+							<span><em>*champ obligatoire</em></span>
+						</td>
 					</tr>
 				</table>
 		</div>
@@ -118,14 +109,20 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="span6" style="margin-left:75px; margin-top:10px;">
-				<table>
+			<div class="span7" style="margin-left:65px; margin-top:10px;">
+				<table class="radioGroup" style="width:100%;">
 					<tr>
-						<td style="font-weight:bold; font-size:1.3em;">Tarif unique :180 euros</td>
+						<td style="font-weight:bold; font-size:1.3em;">Tarif unique : 180 euros</td>
 					</tr>
-					<tr><td style="font-size: 1.1em;">MODALITÉS DE PAIEMENT</td></tr>
-					<tr><td><input type="checkbox" /> paiement en ligne</td></tr>
-					<tr><td><input type="checkbox" /> chèque</td></tr>
+					<tr><td style="font-size: 1.1em;padding-top:10px;"><b>MODALITÉS DE PAIEMENT</b></td></tr>
+					<tr><td style="padding-top:10px;"><?php echo $this->paybox->payment; ?></td></tr>
+					<tr>
+						<td style="padding-top:10px;">
+							<?php echo $this->paybox->submit; ?>
+							<!-- <input type="submit" style=" float:right; margin-right:30px; background-color:#656565; border:0px; color:#FFFFFF; width:70px; height:20px; font-weight:bold;" />!-->
+							<div class="end" style=" float:right; margin-right:-80px; background-color: #656565; width:20px; height:20px;"></div>
+						</td>
+					</tr>
 				</table>
 
 			</div>

@@ -68,6 +68,10 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 				$studentGraduationYear = $params['studentGraduationYear'];
 				$billingAddress = $params['billingAddress'];
 				$paymentType = $params['payment'];
+				
+				if($university == ""){
+					$studentGraduationYear = "";
+				}
 
 				$user = array('gender' => $gender, 'name' => $name, 'firstname' => $firstname, 'address' => $address, 'postalCode' => $postalCode, 'city' => $city, 'country' => $country, 'officeTelNumber' => $officeTelNumber, 'mobilePhoneNumber' => $mobilePhoneNumber, 'email' => $email, 'activity' => $activity, 'diploma' => $diploma, 'university' => $university, 'studentGraduationYear' => $studentGraduationYear, 'billingAddress' => $billingAddress, 'paymentType' => $paymentType, 'status' => 'nouveau', );
 
