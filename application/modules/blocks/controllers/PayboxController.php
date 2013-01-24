@@ -41,16 +41,11 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 		$paybox = new Application_Form_ClientPayboxForm;
 		$paybox->setTranslator($translator);
 
-		$paybox -> setAttrib('action', $this -> _helper -> url -> url());
+		$paybox -> setAttrib('action', $this -> _helper -> url -> url(array(),null,true));
 
 		$this -> view -> paybox = $paybox;
 
 		$request = $this -> getRequest();
-		
-		if($this->_session->get('error', '') != ""){
-			$this->view->error = $this->_session->get('error');
-			$this->_session->set('error', null);
-		}
 
 		if ($request -> isPost()) {
 			if ($paybox -> isValid($request -> getPost())) {
@@ -96,11 +91,19 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 						$this -> _helper -> redirector -> gotoRoute(array('action' => 'check'));
 					}
 				} else {
-					$this->_session->set('error', 'Adresse e-mail déja utilisée');
-					$this -> _helper -> redirector -> gotoRoute(array('action' => 'index'));
+					$this->view->error = 'Adresse e-mail déja utilisée';
+				}
+			}else{
+				$this->view->hasError= true;
+				$this->view->errorFieldsArray = array();
+				foreach($paybox->getErrors() as $key => $value){
+					if(count($value) > 0){
+						$this->view->errorFieldsArray[]='<a href="#'.$key.'">'.$paybox->getElement($key)->getLabel().'</a>';
+					}
 				}
 			}
 		}
+
 
 	}
 
@@ -127,7 +130,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 				'PBX_TOTAL' 		=> '18000', 
 				'PBX_DEVISE' 		=> '978', 
 				'PBX_CMD' 			=> $sessionUser['ref'], 
-				'PBX_PORTEUR' 		=> "mickael.goncalves@webtales.fr",
+				'PBX_PORTEUR' 		=> $sessionUser['email'],
 				//informations nécessaires aux traitements (réponse)
 				'PBX_RETOUR' 		=> "montant:M;maref:R;auto:A;trans:T;paiement:P;carte:C;idtrans:S;pays:Y;erreur:E;validite:D;IP:I;BIN6:N;digest:H;sign:K", 
 				'PBX_EFFECTUE' 		=> $serverUrl . $this -> _helper -> url -> url(array('action' => 'done', 'controller' => $controller, 'module' => $module), null, true), 
