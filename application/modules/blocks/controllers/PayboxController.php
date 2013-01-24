@@ -495,17 +495,19 @@ class Blocks_PayboxController extends Blocks_AbstractController
             }
             fputcsv($csvResource, $csvLine);
         }
-        
-        $this->getResponse()->clearBody();
-        $this->getResponse()->setHeader('Content-Type', 'application/csv;charset=UTF-8');
-        $this->getResponse()->setHeader('Content-Disposition', 'filename="' . $fileName . '"');
-        $this->getResponse()->sendHeaders();
-        
-        rewind($csvResource);
-        fpassthru($csvResource);
-        fclose($csvResource);
-        
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
+        
+        $this->getResponse()->clearBody();
+        $this->getResponse()->clearHeaders();
+        $this->getResponse()->setHeader('Content-Type', 'application/csv');
+        $this->getResponse()->setHeader('Content-Disposition', 'attachment; filename="' . $fileName . '"');
+        $this->getResponse()->sendHeaders();
+        
+        fclose($csvResource);
+        
+        $content = file_get_contents($filePath);
+        echo utf8_decode($content);
+        die();
     }
 }
