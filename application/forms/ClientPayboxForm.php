@@ -72,7 +72,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		$this->addElement($student);
 		
 		$studentGraduationYear = new Zend_Form_Element_Select('studentGraduationYear' );
-		$studentGraduationYear	->addMultiOptions(array('5ème année'=>'5ème année','6ème année'	=> '6ème année',));
+		$studentGraduationYear	->addMultiOptions(array('' => '', '5ème année'=>'5ème année','6ème année'=> '6ème année',));
 		$this->addElement($studentGraduationYear);
 		
 		$billingAddress = new Zend_Form_Element_Checkbox('billingAddress');
