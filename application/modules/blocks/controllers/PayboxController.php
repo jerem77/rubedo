@@ -274,7 +274,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 
 		$amount = "00001";
 
-		$user = $this -> _paybox -> findByRef($params['ref']);
+		$user = $this -> _paybox -> findByRef($params['maref']);
 		
 		if (is_array($user) && count($user['data']) == 1) {
 			$user = $user['data'][0];

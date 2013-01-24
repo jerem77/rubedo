@@ -48,12 +48,12 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		
 		$officeTelNumber = new Zend_Form_Element_Text('officeTelNumber');
 		$officeTelNumber	->setAutoInsertNotEmptyValidator(false)
-		          			->addValidator('Digits', false, array('allowWhiteSpace' => true));
+		          			->addValidator('Digits');
 		$this->addElement($officeTelNumber);
 		
 		$mobilePhoneNumber = new Zend_Form_Element_Text('mobilePhoneNumber');
 		$mobilePhoneNumber	->setAutoInsertNotEmptyValidator(false)
-		          			->addValidator('Digits', false, array('allowWhiteSpace' => true));
+		          			->addValidator('Digits');
 		$this->addElement($mobilePhoneNumber);
 		
 		$email = new Zend_Form_Element_Text('email');
