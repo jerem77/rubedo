@@ -161,20 +161,6 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 	}
 
 	public function doneAction() {
-		if($this->_session->get('payboxUser', '') != ""){
-			$sessionUser = $this -> _session -> get('payboxUser', '');
-	  	
-	    	$user = $this -> _paybox -> findById($sessionUser['id']);
-
-	    	if (count($user) > 0) {
-	      		$sessionUser['status'] = 'payé';
-	     		$this -> _paybox -> update($sessionUser);
-		  
-	    		$this -> _session -> set('payboxUser', null);
-		  	
-			}
-		}
-		
 		$controller = $this -> getRequest() -> getControllerName();
 		$module = $this -> getRequest() -> getModuleName();
 
@@ -185,20 +171,6 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 	}
 
 	public function refusedAction() {
-		if($this->_session->get('payboxUser', '') != ""){
-			$sessionUser = $this -> _session -> get('payboxUser', '');
-	  	
-	    	$user = $this -> _paybox -> findById($sessionUser['id']);
-	  	
-	    	if (count($user) > 0) {
-	      		$sessionUser['status'] = 'paiement refusé';
-	     		$this -> _paybox -> update($sessionUser);
-		  
-	    		$this -> _session -> set('payboxUser', null);
-		  	
-			}
-		}
-
 		$controller = $this -> getRequest() -> getControllerName();
 		$module = $this -> getRequest() -> getModuleName();
 
@@ -233,20 +205,6 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 	}
 
 	public function errorAction() {
-		if($this->_session->get('payboxUser', '') != ""){
-			$sessionUser = $this -> _session -> get('payboxUser', '');
-	  	
-	    	$user = $this -> _paybox -> findById($sessionUser['id']);
-	  	
-	    	if (count($user) > 0) {
-	      		$sessionUser['status'] = 'erreur lors du paiement';
-	     		$this -> _paybox -> update($sessionUser);
-		  
-	    		$this -> _session -> set('payboxUser', null);
-		  	
-			}
-		}
-
 		$controller = $this -> getRequest() -> getControllerName();
 		$module = $this -> getRequest() -> getModuleName();
 
