@@ -3,7 +3,9 @@
 	<div style="width:740px; margin-left:100px; border-top:0px !important; border:1px solid #C0C0C0; border-bottom: 0px; padding-bottom: 15px;">
 		<?php
 			if(isset($this->error)){
-				echo "<span style='font-size:1em;font-weight:bold;color:red;margin-left:50px;margin-bottom:20px;display:block;'>".$this->error."</span>";
+				?>
+				<div class="alert alert-error"><strong><?php echo $this->error; ?></strong></div></span>
+				<?php
 			}
 		?>
 		<?php
