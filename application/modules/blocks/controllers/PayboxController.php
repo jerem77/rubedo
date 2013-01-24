@@ -161,7 +161,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 	}
 
 	public function doneAction() {
-		if($this->_session->get('payboxUSer', '') != ""){
+		if($this->_session->get('payboxUser', '') != ""){
 			$sessionUser = $this -> _session -> get('payboxUser', '');
 	  	
 	    	$user = $this -> _paybox -> findById($sessionUser['id']);
@@ -185,7 +185,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 	}
 
 	public function refusedAction() {
-		if($this->_session->get('payboxUSer', '') != ""){
+		if($this->_session->get('payboxUser', '') != ""){
 			$sessionUser = $this -> _session -> get('payboxUser', '');
 	  	
 	    	$user = $this -> _paybox -> findById($sessionUser['id']);
@@ -209,7 +209,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 	}
 
 	public function canceledAction() {
-		if($this->_session->get('payboxUSer', '') != ""){
+		if($this->_session->get('payboxUser', '') != ""){
 			$sessionUser = $this -> _session -> get('payboxUser', '');
 	  		
 	    	$user = $this -> _paybox -> findById($sessionUser['id']);
@@ -233,7 +233,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 	}
 
 	public function errorAction() {
-		if($this->_session->get('payboxUSer', '') != ""){
+		if($this->_session->get('payboxUser', '') != ""){
 			$sessionUser = $this -> _session -> get('payboxUser', '');
 	  	
 	    	$user = $this -> _paybox -> findById($sessionUser['id']);
