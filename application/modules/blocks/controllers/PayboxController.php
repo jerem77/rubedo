@@ -497,8 +497,8 @@ class Blocks_PayboxController extends Blocks_AbstractController
         }
         
         $this->getResponse()->clearBody();
-        $this->getResponse()->setHeader('Content-Type', 'content-type:application/csv;charset=UTF-8');
-        $this->getResponse()->setHeader('Content-Disposition', 'attachment; filename="' . $fileName . '"');
+        $this->getResponse()->setHeader('Content-Type', 'application/csv;charset=UTF-8');
+        $this->getResponse()->setHeader('Content-Disposition', 'filename="' . $fileName . '"');
         $this->getResponse()->sendHeaders();
         
         rewind($csvResource);
