@@ -137,7 +137,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
                             'studentGraduationYear' => $studentGraduationYear,
                             'billingAddress' => $billingAddress,
                             'paymentType' => $paymentType,
-                            'status' => 'paiement par chéque'
+                            'status' => 'paiement par chèque'
                         );
                         
                         $result = $this->_paybox->create($user);
@@ -412,7 +412,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
                 'property' => 'status',
                 'value' => array(
                     'payé',
-                    'paiement par chéque'
+                    'paiement par chèque'
                 ),
                 'operator' => '$in'
             )
@@ -450,7 +450,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
             'firstname' => 'prénom',
             'email' => 'courriel',
             'ref' => 'référence',
-            'status' => 'status',
+            'status' => 'statut',
             'address' => 'adresse',
             'postalCode' => 'code postal',
             'city' => 'ville',
@@ -461,7 +461,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
             'billingAddress' => 'facturation',
             'lastUpdateTime' => 'date de validation',
             'paymentType' => 'type de paiement',
-            'authorizationNumber' => 'numéro d\'authorisation',
+            'authorizationNumber' => 'numéro d\'autorisation',
             'transactionId' => 'identifiant de transaction',
             'studentGraduationYear' => 'année suivie',
             'university' => 'université'
@@ -472,7 +472,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
         foreach ($fieldsArray as $field) {
             $csvLine[] = $headerArray[$field];
         }
-        fputcsv($csvResource, $csvLine);
+        fputcsv($csvResource, $csvLine,';');
         
         foreach ($list['data'] as $client) {
             $csvLine = array();
@@ -493,7 +493,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
                         break;
                 }
             }
-            fputcsv($csvResource, $csvLine);
+            fputcsv($csvResource, $csvLine,';');
         }
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
