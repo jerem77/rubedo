@@ -290,10 +290,10 @@ background-image: url('../images/headerLogo.png');
 
 #home-text
 {
-	width:400px;
-	position:absolute;
-	margin-left:600px;
-	margin-top:60px;
+width: 400px;
+position: relative;
+margin-top: -450px;
+margin-left: 600px;
 }
 .bloc
 {
