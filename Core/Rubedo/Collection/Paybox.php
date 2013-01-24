@@ -34,4 +34,9 @@ class Paybox extends AbstractCollection implements IPaybox
 		parent::__construct();
 	}
 	
+	public function findByRef($ref) {
+		$filter = (array(array('property' => 'ref', 'value' => $ref)));
+		return $this->getList($filter);
+	}
+	
 }

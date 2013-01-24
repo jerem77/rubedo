@@ -72,6 +72,8 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 				$studentGraduationYear = $params['studentGraduationYear'];
 				$billingAddress = $params['billingAddress'];
 				$paymentType = $params['payment'];
+				$ref = new MongoId();
+				$ref = (string)$ref;
 				
 				if($university == ""){
 					$studentGraduationYear = "";
@@ -80,7 +82,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 				$result = $this->_paybox->getList(array(array('property' => 'email', 'value' => $email), array('property' => 'status', 'value' => 'payé')));
 				if(count($result['data'])==0){
 					if($paymentType=="card"){
-						$user = array('gender' => $gender, 'name' => $name, 'firstname' => $firstname, 'address' => $address, 'postalCode' => $postalCode, 'city' => $city, 'country' => $country, 'officeTelNumber' => $officeTelNumber, 'mobilePhoneNumber' => $mobilePhoneNumber, 'email' => $email, 'activity' => $activity, 'diploma' => $diploma, 'university' => $university, 'studentGraduationYear' => $studentGraduationYear, 'billingAddress' => $billingAddress, 'paymentType' => $paymentType, 'status' => 'nouveau', );
+						$user = array('gender' => $gender, 'name' => $name, 'firstname' => $firstname, 'address' => $address, 'postalCode' => $postalCode, 'city' => $city, 'country' => $country, 'officeTelNumber' => $officeTelNumber, 'mobilePhoneNumber' => $mobilePhoneNumber, 'email' => $email, 'activity' => $activity, 'diploma' => $diploma, 'university' => $university, 'studentGraduationYear' => $studentGraduationYear, 'billingAddress' => $billingAddress, 'paymentType' => $paymentType, 'status' => 'nouveau', 'ref' => $ref,);
 		
 						$result = $this -> _paybox -> create($user);
 		
@@ -108,49 +110,55 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 		$module = $this -> getRequest() -> getModuleName();
 
 		$serverUrl = $this -> getRequest() -> getScheme() . '://' . $this -> getRequest() -> getHttpHost();
-		$ref = new MongoId();
-		$params = array(
-			//mode d'appel
-			'PBX_MODE' => '1',
-			//identification
-			'PBX_SITE' => '0983514', 
-			'PBX_RANG' => '01', 
-			'PBX_IDENTIFIANT' => '354677877',
-			//gestion de la page de connection : paramétrage "invisible"
-			'PBX_WAIT' => '0', 
-			'PBX_BOUTPI' => "nul", 
-			'PBX_BKGD' => "white",
-			//informations paiement (appel)
-			'PBX_TOTAL' => '00001', 
-			'PBX_DEVISE' => '978', 
-			'PBX_CMD' => (string)$ref, 
-			'PBX_PORTEUR' => "mickael.goncalves@webtales.fr",
-			//informations nécessaires aux traitements (réponse)
-			'PBX_RETOUR' => "montant:M;maref:R;auto:A;trans:T;paiement:P;carte:C;idtrans:S;pays:Y;erreur:E;validite:D;IP:I;BIN6:N;digest:H;sign:K", 
-			'PBX_EFFECTUE' => $serverUrl . $this -> _helper -> url -> url(array('action' => 'done', 'controller' => $controller, 'module' => $module), null, true), 
-			'PBX_REFUSE' => $serverUrl . $this -> _helper -> url -> url(array('action' => 'refused', 'controller' => $controller, 'module' => $module), null, true), 
-			'PBX_ANNULE' => $serverUrl . $this -> _helper -> url -> url(array('action' => 'canceled', 'controller' => $controller, 'module' => $module), null, true), 
-			'PBX_REPONDRE_A' => "www.journees-zimmerdental.fr/blocks/paybox/back-payment",
-			'PBX_PAYBOX' => "https://preprod-tpeweb.paybox.com/cgi/MYpagepaiement.cgi",
-			//page en cas d'erreur
-			'PBX_ERREUR' => $serverUrl . $this -> _helper -> url -> url(array('action' => 'error', 'controller' => $controller, 'module' => $module), null, true),
-			//en plus
-			'PBX_TYPECARTE' => "CB", 
-			'PBX_LANGUE' => "FRA", 
-		);
-
-		foreach ($params as $key => $value) {
-			$queryStringArray[] = "$key=$value";
+		$sessionUser = $this->_session->get('payboxUser');
+		
+		if(is_array($sessionUser) && count($sessionUser)>0) {
+			$params = array(
+				//mode d'appel
+				'PBX_MODE' 			=> '1',
+				//identification
+				'PBX_SITE' 			=> '0983514', 
+				'PBX_RANG' 			=> '01', 
+				'PBX_IDENTIFIANT' 	=> '354677877',
+				//gestion de la page de connection : paramétrage "invisible"
+				'PBX_WAIT' 			=> '0', 
+				'PBX_BOUTPI' 		=> "nul", 
+				'PBX_BKGD' 			=> "white",
+				//informations paiement (appel)
+				'PBX_TOTAL' 		=> '00001', 
+				'PBX_DEVISE' 		=> '978', 
+				'PBX_CMD' 			=> $sessionUser['ref'], 
+				'PBX_PORTEUR' 		=> "mickael.goncalves@webtales.fr",
+				//informations nécessaires aux traitements (réponse)
+				'PBX_RETOUR' 		=> "montant:M;maref:R;auto:A;trans:T;paiement:P;carte:C;idtrans:S;pays:Y;erreur:E;validite:D;IP:I;BIN6:N;digest:H;sign:K", 
+				'PBX_EFFECTUE' 		=> $serverUrl . $this -> _helper -> url -> url(array('action' => 'done', 'controller' => $controller, 'module' => $module), null, true), 
+				'PBX_REFUSE' 		=> $serverUrl . $this -> _helper -> url -> url(array('action' => 'refused', 'controller' => $controller, 'module' => $module), null, true), 
+				'PBX_ANNULE' 		=> $serverUrl . $this -> _helper -> url -> url(array('action' => 'canceled', 'controller' => $controller, 'module' => $module), null, true), 
+				'PBX_REPONDRE_A' 	=> "www.journees-zimmerdental.fr/blocks/paybox/back-payment",
+				'PBX_PAYBOX' 		=> "https://preprod-tpeweb.paybox.com/cgi/MYpagepaiement.cgi",
+				//page en cas d'erreur
+				'PBX_ERREUR' 		=> $serverUrl . $this -> _helper -> url -> url(array('action' => 'error', 'controller' => $controller, 'module' => $module), null, true),
+				//en plus
+				'PBX_TYPECARTE' 	=> "CB",
+				'PBX_LANGUE' 		=> "FRA",
+			);
+	
+			foreach ($params as $key => $value) {
+				$queryStringArray[] = "$key=$value";
+			}
+	
+			$queryString = implode('&', $queryStringArray);
+	
+			/* Mettre le montant en session */
+	
+			//lancement paiement par URL
+			$url = '/cgi-bin/modulev3.cgi?' . $queryString;
+	
+			$this -> _redirect($url);
+		} else {
+			$this->_session->set('error', 'Erreur lors de la procédure de paiement, merci de réessayer ultérieurement');
+			$this -> _helper -> redirector -> gotoRoute(array('action' => 'index'));
 		}
-
-		$queryString = implode('&', $queryStringArray);
-
-		/* Mettre le montant en session */
-
-		//lancement paiement par URL
-		$url = '/cgi-bin/modulev3.cgi?' . $queryString;
-
-		$this -> _redirect($url);
 	}
 
 	public function doneAction() {
@@ -265,12 +273,11 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 		$url = substr($url, 0, $pos);
 
 		$amount = "00001";
-		
-		$sessionUser = $this -> _session -> get('payboxUser', '');
 
-		$filter = array('email' => $sessionUser['email']);
-		$user = $this -> _paybox -> customFind($filter);
-		if (count($user) == 1) {
+		$user = $this -> _paybox -> findByRef($params['ref']);
+		
+		if (is_array($user) && count($user['data']) == 1) {
+			$user = $user['data'][0];
 			if (isset($params['auto']) && isset($params['erreur']) && isset($params['sign']) && isset($params['montant'])) {
 				if ($params['erreur'] == "00000") {
 					if ($amount == $params['montant']) {
@@ -290,12 +297,9 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 							$user['status'] = 'payé';
 	
 							$this -> _paybox -> update($user);
-	
-							$this -> _session -> set('payboxUSer', null);
 						} else {
 							$user['status'] = 'url et signature differents';
 							$this -> _paybox -> update($user);
-							$this -> _session -> set('payboxUSer', null);
 							
 							$this -> getResponse() -> setHttpResponseCode(400);
 						}
