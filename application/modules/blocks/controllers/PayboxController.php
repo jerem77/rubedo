@@ -127,7 +127,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 				'PBX_TOTAL' 		=> '18000', 
 				'PBX_DEVISE' 		=> '978', 
 				'PBX_CMD' 			=> $sessionUser['ref'], 
-				'PBX_PORTEUR' 		=> "mickael.goncalves@webtales.fr",
+				'PBX_PORTEUR' 		=> $sessionUser['email'],
 				//informations nécessaires aux traitements (réponse)
 				'PBX_RETOUR' 		=> "montant:M;maref:R;auto:A;trans:T;paiement:P;carte:C;idtrans:S;pays:Y;erreur:E;validite:D;IP:I;BIN6:N;digest:H;sign:K", 
 				'PBX_EFFECTUE' 		=> $serverUrl . $this -> _helper -> url -> url(array('action' => 'done', 'controller' => $controller, 'module' => $module), null, true), 
