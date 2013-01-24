@@ -74,7 +74,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		
 		$activity = new Zend_Form_Element_Select('activity' );
 		$activity	->setLabel('Activité')
-					->addMultiOptions(array('assitante dentaire'=>'Assistante Dentaire','chirurgien maxillo-facial'=>'Chirurgien Maxillo-facial','etudiant'=>'Etudiant','implantologiste'=>'Implantologiste','omnipraticien'=>'Omnipraticien','parodontologiste'=>'Parodontologiste',));
+					->addMultiOptions(array('assistante dentaire'=>'Assistante Dentaire','chirurgien maxillo-facial'=>'Chirurgien Maxillo-facial','etudiant'=>'Etudiant','implantologiste'=>'Implantologiste','omnipraticien'=>'Omnipraticien','parodontologiste'=>'Parodontologiste',));
 		$this->addElement($activity);
 		
 		$student = new Zend_Form_Element_Text('student');
