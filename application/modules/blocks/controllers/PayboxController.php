@@ -67,7 +67,6 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 				$mobilePhoneNumber = $params['mobilePhoneNumber'];
 				$email = $params['email'];
 				$activity = $params['activity'];
-				$diploma = $params['diploma'];
 				$university = $params['student'];
 				$studentGraduationYear = $params['studentGraduationYear'];
 				$billingAddress = $params['billingAddress'];
@@ -82,7 +81,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 				$result = $this->_paybox->getList(array(array('property' => 'email', 'value' => $email), array('property' => 'status', 'value' => 'payé')));
 				if(count($result['data'])==0){
 					if($paymentType=="card"){
-						$user = array('gender' => $gender, 'name' => $name, 'firstname' => $firstname, 'address' => $address, 'postalCode' => $postalCode, 'city' => $city, 'country' => $country, 'officeTelNumber' => $officeTelNumber, 'mobilePhoneNumber' => $mobilePhoneNumber, 'email' => $email, 'activity' => $activity, 'diploma' => $diploma, 'university' => $university, 'studentGraduationYear' => $studentGraduationYear, 'billingAddress' => $billingAddress, 'paymentType' => $paymentType, 'status' => 'nouveau', 'ref' => $ref,);
+						$user = array('gender' => $gender, 'name' => $name, 'firstname' => $firstname, 'address' => $address, 'postalCode' => $postalCode, 'city' => $city, 'country' => $country, 'officeTelNumber' => $officeTelNumber, 'mobilePhoneNumber' => $mobilePhoneNumber, 'email' => $email, 'activity' => $activity, 'university' => $university, 'studentGraduationYear' => $studentGraduationYear, 'billingAddress' => $billingAddress, 'paymentType' => $paymentType, 'status' => 'nouveau', 'ref' => $ref,);
 		
 						$result = $this -> _paybox -> create($user);
 		
@@ -90,7 +89,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 						$this -> _session -> set('payboxUser', $result['data']);
 						$this -> _helper -> redirector -> gotoRoute(array('action' => 'payment'));
 					} else {
-						$user = array('gender' => $gender, 'name' => $name, 'firstname' => $firstname, 'address' => $address, 'postalCode' => $postalCode, 'city' => $city, 'country' => $country, 'officeTelNumber' => $officeTelNumber, 'mobilePhoneNumber' => $mobilePhoneNumber, 'email' => $email, 'activity' => $activity, 'diploma' => $diploma, 'university' => $university, 'studentGraduationYear' => $studentGraduationYear, 'billingAddress' => $billingAddress, 'paymentType' => $paymentType, 'status' => 'paiement par chéque', );
+						$user = array('gender' => $gender, 'name' => $name, 'firstname' => $firstname, 'address' => $address, 'postalCode' => $postalCode, 'city' => $city, 'country' => $country, 'officeTelNumber' => $officeTelNumber, 'mobilePhoneNumber' => $mobilePhoneNumber, 'email' => $email, 'activity' => $activity, 'university' => $university, 'studentGraduationYear' => $studentGraduationYear, 'billingAddress' => $billingAddress, 'paymentType' => $paymentType, 'status' => 'paiement par chéque', );
 		
 						$result = $this -> _paybox -> create($user);
 						
@@ -125,7 +124,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 				'PBX_BOUTPI' 		=> "nul", 
 				'PBX_BKGD' 			=> "white",
 				//informations paiement (appel)
-				'PBX_TOTAL' 		=> '00001', 
+				'PBX_TOTAL' 		=> '18000', 
 				'PBX_DEVISE' 		=> '978', 
 				'PBX_CMD' 			=> $sessionUser['ref'], 
 				'PBX_PORTEUR' 		=> "mickael.goncalves@webtales.fr",
@@ -166,7 +165,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 			$sessionUser = $this -> _session -> get('payboxUser', '');
 	  	
 	    	$user = $this -> _paybox -> findById($sessionUser['id']);
-	  	
+
 	    	if (count($user) > 0) {
 	      		$sessionUser['status'] = 'payé';
 	     		$this -> _paybox -> update($sessionUser);
@@ -272,7 +271,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 		$pos = strrpos($url, '&');
 		$url = substr($url, 0, $pos);
 
-		$amount = "00001";
+		$amount = "18000";
 
 		$user = $this -> _paybox -> findByRef($params['maref']);
 		
@@ -291,7 +290,6 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 						$result = openssl_verify($url, $sign, $pubkey);
 	
 						if ($result == 1) {
-							$user['paymentRef'] = $params['maref'];
 							$user['authorizationNumber'] = $params['auto'];
 							$user['transactionId'] = $params['trans'];
 							$user['status'] = 'payé';
@@ -311,7 +309,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 						$this -> getResponse() -> setHttpResponseCode(500);
 					}
 				} else {
-					$user['status'] = 'erreur CGI';
+					$user['status'] = 'erreur CGI ('.$params['erreur'].')';
 					$this -> _paybox -> update($user);
 					$this -> _session -> set('payboxUSer', null);
 					
