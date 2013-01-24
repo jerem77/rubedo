@@ -14,22 +14,22 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		$name = new Zend_Form_Element_Text('name');
 		$name	->setLabel('Nom')
 				->setRequired(true)
-		       	->setAutoInsertNotEmptyValidator(false)
-		       	->addValidator('Alpha', false, array('allowWhiteSpace' => true));
+		       	->setAutoInsertNotEmptyValidator(false);
+		       	//->addValidator('Alpha', false, array('allowWhiteSpace' => true));
 		$this->addElement($name);
 		
 		$firstname = new Zend_Form_Element_Text('firstname');
 		$firstname	->setLabel('Prénom')
 					->setRequired(true)
-		          	->setAutoInsertNotEmptyValidator(false)
-		          	->addValidator('Alpha', false, array('allowWhiteSpace' => true));
+		          	->setAutoInsertNotEmptyValidator(false);
+		          	//->addValidator('Alpha', false, array('allowWhiteSpace' => true));
 		$this->addElement($firstname);
 		
 		$address = new Zend_Form_Element_Text('address');
 		$address	->setLabel('Adresse')
 					->setRequired(true)
-		          	->setAutoInsertNotEmptyValidator(false)
-		          	->addValidator('Alnum', false, array('allowWhiteSpace' => true));
+		          	->setAutoInsertNotEmptyValidator(false);
+		          	//->addValidator('Alnum', false, array('allowWhiteSpace' => true));
 		$this->addElement($address);
 		
 		$postalCode = new Zend_Form_Element_Text('postalCode');
@@ -42,34 +42,34 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		$city = new Zend_Form_Element_Text('city');
 		$city	->setLabel('Ville')
 				->setRequired(true)
-		       	->setAutoInsertNotEmptyValidator(false)
-		       	->addValidator('Alpha', false, array('allowWhiteSpace' => true));
+		       	->setAutoInsertNotEmptyValidator(false);
+		       	//->addValidator('Alpha', false, array('allowWhiteSpace' => true));
 		$this->addElement($city);
 		
 		$country = new Zend_Form_Element_Text('country');
 		$country	->setLabel('Pays')
 					->setRequired(true)
-		          	->setAutoInsertNotEmptyValidator(false)
-		          	->addValidator('Alpha', false, array('allowWhiteSpace' => true));
+		          	->setAutoInsertNotEmptyValidator(false);
+		          	//->addValidator('Alpha', false, array('allowWhiteSpace' => true));
 		$this->addElement($country);
 		
 		$officeTelNumber = new Zend_Form_Element_Text('officeTelNumber');
 		$officeTelNumber	->setLabel('Téléphone Cabinet')
-							->setAutoInsertNotEmptyValidator(false)
-		          			->addValidator('Digits');
+							->setAutoInsertNotEmptyValidator(false);
+		          			//->addValidator('Digits');
 		$this->addElement($officeTelNumber);
 		
 		$mobilePhoneNumber = new Zend_Form_Element_Text('mobilePhoneNumber');
 		$mobilePhoneNumber	->setLabel('Téléphone Portable')
-							->setAutoInsertNotEmptyValidator(false)
-		          			->addValidator('Digits');
+							->setAutoInsertNotEmptyValidator(false);
+		          			//->addValidator('Digits');
 		$this->addElement($mobilePhoneNumber);
 		
 		$email = new Zend_Form_Element_Text('email');
 		$email	->setLabel('E-mail')
 				->setRequired(true)
 		        ->setAutoInsertNotEmptyValidator(false)
-		        ->addValidator('EmailAddress', false, array('allowWhiteSpace' => true));
+		        ->addValidator('EmailAddress', false);
 		$this->addElement($email);
 		
 		$activity = new Zend_Form_Element_Select('activity' );
@@ -79,8 +79,8 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		
 		$student = new Zend_Form_Element_Text('student');
 		$student	->setLabel('Faculté')
-					->setAutoInsertNotEmptyValidator(false)
-		        	->addValidator('Alnum', false, array('allowWhiteSpace' => true));
+					->setAutoInsertNotEmptyValidator(false);
+		        	//->addValidator('Alnum', false, array('allowWhiteSpace' => true));
 		$this->addElement($student);
 		
 		$studentGraduationYear = new Zend_Form_Element_Select('studentGraduationYear' );
