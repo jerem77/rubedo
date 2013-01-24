@@ -25,5 +25,12 @@ namespace Rubedo\Interfaces\Collection;
  * @package Rubedo
  */
 interface IPaybox extends IAbstractCollection{
-	
+		
+	/**
+	 * Allow to find a user by it's payment reference
+	 * 
+	 * @param string $ref Reference of the payment
+	 * @return array Contain the user
+	 */
+	public function findByRef($ref);
 }

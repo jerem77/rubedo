@@ -34,6 +34,12 @@ class Paybox extends AbstractCollection implements IPaybox
 		parent::__construct();
 	}
 	
+	/**
+	 * Allow to find a user by it's payment reference
+	 * 
+	 * @param string $ref Reference of the payment
+	 * @return array Contain the user
+	 */
 	public function findByRef($ref) {
 		$filter = (array(array('property' => 'ref', 'value' => $ref)));
 		return $this->getList($filter);
