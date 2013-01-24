@@ -292,6 +292,7 @@ class Blocks_PayboxController extends Blocks_AbstractController {
 						if ($result == 1) {
 							$user['authorizationNumber'] = $params['auto'];
 							$user['transactionId'] = $params['trans'];
+							$user['amount'] = $params['montant'];
 							$user['status'] = 'payé';
 	
 							$this -> _paybox -> update($user);
