@@ -4,16 +4,18 @@
 	if(self.css("display")=="block")
 	{
 		self.slideUp("slow");
-		
+		$("#overflow").hide();
 	}
 	else
 	{
 		self.slideDown("slow");
+		$("#overflow").show();
 	}
 	$(".info").each(function(){
 		if($(this).css("display")=="block" && $(this).attr("id")!=self.attr("id"))
 		{
 			$(this).slideUp("slow");
+			$("#overflow").hide();
 		}
 	});
     };
