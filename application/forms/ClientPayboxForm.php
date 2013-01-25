@@ -48,6 +48,7 @@ class Application_Form_ClientPayboxForm extends Zend_Form
 		
 		$country = new Zend_Form_Element_Text('country');
 		$country	->setLabel('Pays')
+					->setValue('France')
 					->setRequired(true)
 		          	->setAutoInsertNotEmptyValidator(false);
 		          	//->addValidator('Alpha', false, array('allowWhiteSpace' => true));
