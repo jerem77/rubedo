@@ -34,10 +34,13 @@
 	});
 		
 	});
-	
-	
-	
-	
-	
     };
 })(jQuery);  
+
+$(document).ready(function(){
+	 $('.bloc').css({
+
+    'height': $('.bloc').height()
+
+});
+})
