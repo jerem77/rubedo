@@ -333,6 +333,10 @@ html>/**/body #footer-bar
 	margin-left:600px;
 	margin-top:60px;
 }
+.colwrap
+{
+	overflow:hidden;
+}
 .bloc
 {
 	margin-top:10px;
