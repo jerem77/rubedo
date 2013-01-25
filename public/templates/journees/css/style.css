@@ -309,7 +309,13 @@ html>/**/body #footer-bar
 	color:#FFFFFF;
 }
 
-
+#overflow
+{
+	width:940px;
+	height:1500px;
+	display:none;
+	background-color:pink;
+}
 
 /*
  * 
