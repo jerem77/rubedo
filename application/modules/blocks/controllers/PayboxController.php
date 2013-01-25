@@ -424,6 +424,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
         ));
         
         $fieldsArray = array(
+        	'gender',
             'name',
             'firstname',
             'email',
@@ -446,6 +447,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
         );
         
         $headerArray = array(
+        	'gender' => 'titre',
             'name' => 'nom',
             'firstname' => 'prénom',
             'email' => 'courriel',
