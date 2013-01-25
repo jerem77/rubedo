@@ -6,7 +6,7 @@
 		self.slideUp("slow");
 		
 	}
-	else if($("body").click(function(){
+	else if($(".container-fluid").click(function(){
 		$(".info").each(function(){
 		if($(this).css("display")=="block")
 		{
