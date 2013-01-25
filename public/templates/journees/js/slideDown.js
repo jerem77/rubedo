@@ -40,7 +40,7 @@
 jQuery(document).ready(function(){
 	 jQuery('.bloc').css({
 
-    'height': $('.bloc').height()
+    'height': jQuery('.bloc').height()
 
 });
 })
