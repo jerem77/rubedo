@@ -315,6 +315,8 @@ html>/**/body #footer-bar
 	height:1500px;
 	display:none;
 	background-color:pink;
+	z-index:50;
+	position:absolute;
 }
 
 /*
