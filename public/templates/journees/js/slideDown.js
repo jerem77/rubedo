@@ -37,8 +37,8 @@
     };
 })(jQuery);  
 
-$(document).ready(function(){
-	 $('.bloc').css({
+jQuery(document).ready(function(){
+	 jQuery('.bloc').css({
 
     'height': $('.bloc').height()
 
