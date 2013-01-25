@@ -19,17 +19,7 @@
 		if($(this).css("display")=="block" && $(this).attr("id")!=self.attr("id"))
 		{
 			$(this).slideUp("slow");
-			$("#overflow").hide();
 		}
-	}
-	);
-	$("#overflow").click(function(){
-		$(".info").each(function(){
-		if($(this).css("display")=="block")
-		{
-			$(this).slideUp("slow");
-			$("#overflow").hide();
-		}
-	})
+	});
     };
 })(jQuery);  
