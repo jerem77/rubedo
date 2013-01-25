@@ -6,6 +6,16 @@
 		self.slideUp("slow");
 		
 	}
+	else if($("body").click(function(){
+		$(".info").each(function(){
+		if($(this).css("display")=="block")
+		{
+			$(this).slideUp("slow");
+		}
+	}))
+	{
+		
+	}
 	else
 	{
 		self.slideDown("slow");
