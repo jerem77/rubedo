@@ -137,7 +137,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
                             'studentGraduationYear' => $studentGraduationYear,
                             'billingAddress' => $billingAddress,
                             'paymentType' => $paymentType,
-                            'status' => 'paiement par chéque'
+                            'status' => 'paiement par chèque'
                         );
                         
                         $result = $this->_paybox->create($user);
@@ -412,7 +412,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
                 'property' => 'status',
                 'value' => array(
                     'payé',
-                    'paiement par chéque'
+                    'paiement par chèque'
                 ),
                 'operator' => '$in'
             )
@@ -452,7 +452,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
             'firstname' => 'prénom',
             'email' => 'courriel',
             'ref' => 'référence',
-            'status' => 'status',
+            'status' => 'statut',
             'address' => 'adresse',
             'postalCode' => 'code postal',
             'city' => 'ville',
@@ -463,7 +463,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
             'billingAddress' => 'facturation',
             'lastUpdateTime' => 'date de validation',
             'paymentType' => 'type de paiement',
-            'authorizationNumber' => 'numéro d\'authorisation',
+            'authorizationNumber' => 'numéro d\'autorisation',
             'transactionId' => 'identifiant de transaction',
             'studentGraduationYear' => 'année suivie',
             'university' => 'université'
@@ -474,7 +474,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
         foreach ($fieldsArray as $field) {
             $csvLine[] = $headerArray[$field];
         }
-        fputcsv($csvResource, $csvLine);
+        fputcsv($csvResource, $csvLine,';');
         
         foreach ($list['data'] as $client) {
             $csvLine = array();
@@ -495,19 +495,21 @@ class Blocks_PayboxController extends Blocks_AbstractController
                         break;
                 }
             }
-            fputcsv($csvResource, $csvLine);
+            fputcsv($csvResource, $csvLine,';');
         }
-        
-        $this->getResponse()->clearBody();
-        $this->getResponse()->setHeader('Content-Type', 'application/csv;charset=UTF-8');
-        $this->getResponse()->setHeader('Content-Disposition', 'filename="' . $fileName . '"');
-        $this->getResponse()->sendHeaders();
-        
-        rewind($csvResource);
-        fpassthru($csvResource);
-        fclose($csvResource);
-        
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
+        
+        $this->getResponse()->clearBody();
+        $this->getResponse()->clearHeaders();
+        $this->getResponse()->setHeader('Content-Type', 'application/csv');
+        $this->getResponse()->setHeader('Content-Disposition', 'attachment; filename="' . $fileName . '"');
+        $this->getResponse()->sendHeaders();
+        
+        fclose($csvResource);
+        
+        $content = file_get_contents($filePath);
+        echo utf8_decode($content);
+        die();
     }
 }
