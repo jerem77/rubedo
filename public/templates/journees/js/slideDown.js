@@ -18,14 +18,18 @@
 	$(".info").each(function(){
 		if($(this).css("display")=="block" && $(this).attr("id")!=self.attr("id"))
 		{
-			$(this).slideUp("slow");
+			$(this).slideUp("slow",function(){
+				$("#overflow").hide();
+			});
 		}
 	});
 	$("#overflow").click(function(){
 		$(".info").each(function(){
 		if($(this).css("display")=="block")
 		{
-			$(this).slideUp("slow");
+			$(this).slideUp("slow",function(){
+				$("#overflow").hide();
+			});
 		}
 	});
 		
