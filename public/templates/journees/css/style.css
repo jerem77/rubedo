@@ -444,11 +444,12 @@ html>/**/body #footer-bar
 	height:700px;
 }
 #content-image{
-	background-image:url('../images/exposition-back.png');
-	background-repeat:no-repeat;
+	
 	width:940px;
 	height:700px;
-	background-position: 100px 50px;
+	margin-left:100px;
+	padding-top:50px;
+	
 }
 
 /**

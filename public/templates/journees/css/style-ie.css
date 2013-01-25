@@ -4,6 +4,7 @@
  * 
  */
 .end{
+	display:none;
 	-o-transform:skewx(22deg);
     -moz-transform:skewx(22deg);
     -ms-transform:skewx(22deg);
@@ -381,6 +382,7 @@ margin-left: 600px;
 #programme-content table tr td
 {
 	margin-left:20px !important;
+	margin-top:20px !important;
 	
 }
 .cell100px
