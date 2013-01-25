@@ -81,6 +81,15 @@ html>/**/body .title{
 	font-weight:bold;
 	padding: 7px 5px 10px 5px;
 }
+#overflow
+{
+	width:100%;
+	height:100%;
+	display:none;
+	z-index:50;
+	position:absolute;
+}
+
 
 .big-title
 {
