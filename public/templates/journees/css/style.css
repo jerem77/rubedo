@@ -342,6 +342,7 @@ html>/**/body #footer-bar
 	margin-top:10px;
 	border:1px solid #008bcb;
 	width:291px !important;
+	background-color:#008bcb;
 }
 
 .bloc-title
@@ -380,7 +381,7 @@ html>/**/body #footer-bar
 }
 #bloc-video
 {
-	background-color:#2e2e2e;
+	background-color:#333333;
 }
 #video-content img
 {
