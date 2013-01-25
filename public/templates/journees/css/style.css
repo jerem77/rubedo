@@ -312,9 +312,8 @@ html>/**/body #footer-bar
 #overflow
 {
 	width:940px;
-	height:1500px;
+	height:2000px;
 	display:none;
-	background-color:pink;
 	z-index:50;
 	position:absolute;
 }

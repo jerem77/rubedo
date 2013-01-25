@@ -17,6 +17,15 @@
 			$(this).slideUp("slow");
 			$("#overflow").hide();
 		}
-	});
+	}
+	);
+	$("#overflow").click(function(){
+		$(".info").each(function(){
+		if($(this).css("display")=="block")
+		{
+			$(this).slideUp("slow");
+			$("#overflow").hide();
+		}
+	})
     };
 })(jQuery);  
