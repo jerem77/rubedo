@@ -75,4 +75,7 @@ abstract class Blocks_AbstractController extends Zend_Controller_Action
             $this->getResponse()->appendBody($content, 'default');
         }
     }
+	public function getContentList(){
+		
+	}
 }

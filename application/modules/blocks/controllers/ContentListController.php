@@ -226,4 +226,8 @@ class Blocks_ContentListController extends Blocks_AbstractController
     {
         return $this->_queryReader->findById($queryId);
     }
+	public function getContentList()
+	{
+		
+	}
 }
