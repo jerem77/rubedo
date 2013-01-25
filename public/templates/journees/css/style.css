@@ -382,7 +382,7 @@ html>/**/body #footer-bar
 {
 	width:291px;
 	height:240px;
-	border:none !important;
+	border:none;
 }
 #bloc-invite
 {
