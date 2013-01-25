@@ -21,5 +21,19 @@
 			$(this).slideUp("slow");
 		}
 	});
+	$("#overflow").click(function(){
+		$(".info").each(function(){
+		if($(this).css("display")=="block")
+		{
+			$(this).slideUp("slow");
+		}
+	});
+		
+	});
+	
+	
+	
+	
+	
     };
 })(jQuery);  
