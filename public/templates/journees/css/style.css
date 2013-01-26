@@ -338,8 +338,7 @@ html>/**/body #footer-bar
 	margin-top:10px;
 	border:1px solid #008bcb;
 	width:291px !important;
-	    margin-bottom: -99999px;
-    padding-bottom: 99999px;
+	background-color:#008bcb;
 }
 
 .bloc-title
@@ -368,7 +367,6 @@ html>/**/body #footer-bar
 #inscription-content
 {
 	background-color:#008bcb;
-	height:250px;
 }
 #inscription-content img
 {
@@ -378,11 +376,11 @@ html>/**/body #footer-bar
 }
 #bloc-video
 {
-	background-color:#2e2e2e;
+	background-color:#333333;
 }
 #video-content img
 {
-	width:291px;
+	width:292px;
 	height:240px;
 	border:none;
 }
