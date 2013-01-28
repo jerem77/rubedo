@@ -124,6 +124,11 @@ body
 
 }
 
+.sup {
+	font-size:xx-small;
+	vertical-align:top;
+	line-height: 1em;
+}
 
 /*
  * 
