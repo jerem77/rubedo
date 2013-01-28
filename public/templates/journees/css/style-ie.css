@@ -312,30 +312,6 @@ margin-left: 600px;
 	border:1px solid #008bcb;
 	width:291px !important;
 }
-
-.bloc-title
-{
-	background-color: #008bcb;
-	font-weight:bold;
-	color:white;
-	font-size:1.3em;
-	height:40px;
-}
-
-.bloc-title, x:-moz-any-link, x:default
-{
-	background-color: #008bcb;
-	font-weight:bold;
-	color:white;
-	font-size:1.3em;
-	height:40px;
-}
-.bloc-title span
-{
- 	margin-left:5px;
- 	margin-top:10px;
- 	position:absolute;
-}
 #inscription-content
 {
 	background-color:#008bcb;
