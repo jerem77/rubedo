@@ -108,7 +108,9 @@ html>/**/body .big-title{
 }
 .blue-list
 {
-	list-style-image: url('../images/puce5x5.png');
+	/*list-style-image: url('../images/puce5x5.png');*/
+	list-style: none;
+	
 }
 .blue-text
 {
