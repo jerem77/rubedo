@@ -353,6 +353,7 @@ html>/**/body #footer-bar
 	font-weight:bold;
 	color:white;
 	font-size:1.3em;
+	height: 30px;
 }
 
 .bloc-title, x:-moz-any-link, x:default
@@ -362,10 +363,10 @@ html>/**/body #footer-bar
 	color:white;
 	font-size:1.3em;
 }
-.bloc-title span
+.bloc-title
 {
- 	margin-left:5px;
- 	margin-top:10px;
+ 	padding-left:5px;
+ 	padding-top:10px;
 }
 #inscription-content
 {
