@@ -521,3 +521,11 @@ td {
 	font-size: 1.2em;
 	font-weight: bold;
 }
+
+/**
+ * 	Contacts
+ */
+#lien-hotels {
+	float:right;
+	margin-right:260px;
+}

@@ -428,3 +428,12 @@ margin-left: 600px;
 	display:block;
 	right:20px !important;
 }
+
+/**
+ * 	Contacts
+ */
+
+#lien-hotels {
+	float:none;
+	margin-right: -100px;
+}
