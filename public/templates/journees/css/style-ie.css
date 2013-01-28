@@ -362,8 +362,8 @@ margin-left: 600px;
 	background-image: url('../images/homePageBloc1-back.png');
 	background-repeat: no-repeat;
 	background-color:#cecece;
-	line-height: 13px;
-	font-size: 13px;
+	line-height: 0.9em;
+	font-size: 0.9em;
 }
 .label a{
 	text-decoration:none;
