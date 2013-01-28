@@ -394,7 +394,9 @@ html>/**/body #footer-bar
 	background-repeat: no-repeat;
 	background-color:#cecece;
 }
-
+#bloc-invite #bloc-text {
+	line-height: 13px;
+}
 #bloc-invite table {
 	line-height: 13px;
 }
