@@ -391,6 +391,10 @@ html>/**/body #footer-bar
 	background-repeat: no-repeat;
 	background-color:#cecece;
 }
+
+#bloc-invite table {
+	line-height: 13px;
+}
 .label a{
 	text-decoration:none;
 	color:#FFFFFF;
