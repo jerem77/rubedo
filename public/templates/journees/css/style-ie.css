@@ -363,6 +363,11 @@ margin-left: 600px;
 	background-repeat: no-repeat;
 	background-color:#cecece;
 }
+
+#bloc-invite table {
+	font-size: 0.750em;
+	line-height: 16px;
+}
 .label a{
 	text-decoration:none;
 	color:#FFFFFF;
