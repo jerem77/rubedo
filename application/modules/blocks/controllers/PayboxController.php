@@ -75,8 +75,12 @@ class Blocks_PayboxController extends Blocks_AbstractController
         
 		//Set header
         $message->setSubject('VOTRE INSCRIPTION A LA ZID 2013');
+		$message->setReplyTo(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
+		$message->setReturnPath('contact@zimmerdental.fr');
         $message->setFrom(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
+		$message->setSender('contact@zimmerdental.fr');
         $message->setTo(array($email => $gender." ".$firstname." ".$name));
+		$message->setBcc(array('nicolas.trenti@webtales.fr' => 'Nicolas TRENTI'));
         //$message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
 	
 		//Set body content
@@ -98,8 +102,12 @@ class Blocks_PayboxController extends Blocks_AbstractController
         
 		//Set header
         $message->setSubject('VOTRE INSCRIPTION A LA ZID 2013');
+		$message->setReplyTo(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
+		$message->setReturnPath('contact@zimmerdental.fr');
         $message->setFrom(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
+		$message->setSender('contact@zimmerdental.fr');
         $message->setTo(array($email => $gender." ".$firstname." ".$name));
+		$message->setBcc(array('nicolas.trenti@webtales.fr' => 'Nicolas TRENTI'));
         //$message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
 	
 		//Set body content
@@ -121,8 +129,12 @@ class Blocks_PayboxController extends Blocks_AbstractController
         
 		//Set header
         $message->setSubject('VOTRE INSCRIPTION A LA ZID 2013');
+		$message->setReplyTo(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
+		$message->setReturnPath('contact@zimmerdental.fr');
         $message->setFrom(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
+		$message->setSender('contact@zimmerdental.fr');
         $message->setTo(array($email => $gender." ".$firstname." ".$name));
+		$message->setBcc(array('nicolas.trenti@webtales.fr' => 'Nicolas TRENTI'));
         //$message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
 	
 		//Set body content
