@@ -424,7 +424,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
         ));
         
         $fieldsArray = array(
-        	'gender',
+            'gender',
             'name',
             'firstname',
             'email',
@@ -447,7 +447,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
         );
         
         $headerArray = array(
-        	'gender' => 'titre',
+            'gender' => 'titre',
             'name' => 'nom',
             'firstname' => 'prénom',
             'email' => 'courriel',
@@ -474,7 +474,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
         foreach ($fieldsArray as $field) {
             $csvLine[] = $headerArray[$field];
         }
-        fputcsv($csvResource, $csvLine,';');
+        fputcsv($csvResource, $csvLine, ';');
         
         foreach ($list['data'] as $client) {
             $csvLine = array();
@@ -495,7 +495,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
                         break;
                 }
             }
-            fputcsv($csvResource, $csvLine,';');
+            fputcsv($csvResource, $csvLine, ';');
         }
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
@@ -511,5 +511,79 @@ class Blocks_PayboxController extends Blocks_AbstractController
         $content = file_get_contents($filePath);
         echo utf8_decode($content);
         die();
+    }
+
+    /**
+     * simple test action
+     */
+    public function testMailAction ()
+    {
+        $message = $this->_getMailObject();
+        
+        // Give the message a subject
+        $message->setSubject('Test de courriel accentué');
+        
+        // Set the From address with an associative array
+        $message->setFrom(array(
+            'contact@webtales.fr' => 'WebTales'
+        ));
+        
+        // Set the To addresses with an associative array
+        $message->setTo(array(
+            'julien.bourdin@webtales.fr',
+            'jbourdin@gmail.com' => 'Julien Bourdin'
+        ));
+        
+        // Give it a body
+        $message->setBody('test de message depuis le site journées');
+        
+        // And optionally an alternative body
+        //$message->addPart('<q>Here is the message itself</q>', 'text/html');
+        
+        $result = $this->_sendMessage($message);
+        
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();
+        
+        Zend_Debug::dump($result);
+    }
+
+    /**
+     * Get an instance of message
+     * 
+     * @return Swift_Message
+     */
+    protected function _getMailObject ()
+    {
+        return Swift_Message::newInstance();
+    }
+
+    /**
+     * Send the message
+     * 
+     * return number of destination message
+     * 
+     * @param Swift_Message $message
+     * @throws Zend_Controller_Exception
+     * @return number
+     */
+    protected function _sendMessage (Swift_Message $message)
+    {
+        if (! isset($this->_transport)) {
+            $options = Zend_Registry::get('swiftMail');
+            if (! isset($options['smtp'])) {
+                throw new Zend_Controller_Exception('no smtp in configuration');
+            }
+            $this->_transport = Swift_SmtpTransport::newInstance($options['smtp']['server'], $options['smtp']['port'], $options['smtp']['ssl'] ? 'ssl' : null);
+            if (isset($options['smtp']['username'])) {
+                $this->_transport->setUsername($options['smtp']['username'])->setPassword($options['smtp']['password']);
+            }
+        }
+        if (! isset($this->_mailer)) {
+            $this->_mailer = Swift_Mailer::newInstance($this->_transport);
+        }
+        
+        // Send the message
+        return $this->_mailer->send($message);
     }
 }
