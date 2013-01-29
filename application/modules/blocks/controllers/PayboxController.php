@@ -80,8 +80,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
         $message->setFrom(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
 		$message->setSender('contact@zimmerdental.fr');
         $message->setTo(array($email => $gender." ".$firstname." ".$name));
-		$message->setBcc(array('nicolas.trenti@webtales.fr' => 'Nicolas TRENTI'));
-        //$message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
+        $message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
 	
 		//Send the logo to the view
         $this->view->logo = $message->embed(Swift_Image::fromPath(APPLICATION_PATH.'/../public/templates/journees/images/logo_mail.png'));
@@ -107,8 +106,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
         $message->setFrom(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
 		$message->setSender('contact@zimmerdental.fr');
         $message->setTo(array($email => $gender." ".$firstname." ".$name));
-		$message->setBcc(array('nicolas.trenti@webtales.fr' => 'Nicolas TRENTI'));
-        //$message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
+        $message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
 	
 		//Send the logo to the view
         $this->view->logo = $message->embed(Swift_Image::fromPath(APPLICATION_PATH.'/../public/templates/journees/images/logo_mail.png'));
@@ -134,8 +132,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
         $message->setFrom(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
 		$message->setSender('contact@zimmerdental.fr');
         $message->setTo(array($email => $gender." ".$firstname." ".$name));
-		$message->setBcc(array('nicolas.trenti@webtales.fr' => 'Nicolas TRENTI'));
-        //$message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
+        $message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
 	
 		//Send the logo to the view
         $this->view->logo = $message->embed(Swift_Image::fromPath(APPLICATION_PATH.'/../public/templates/journees/images/logo_mail.png'));
