@@ -530,7 +530,11 @@ class Blocks_PayboxController extends Blocks_AbstractController
         
         // Set the To addresses with an associative array
         $message->setTo(array(
-            //'mickael.goncalves@webtales.fr'=>'Mickaël Goncalves',
+            'mickael.goncalves@webtales.fr'=>'Mickaël Goncalves',
+            //'nicolas.trenti@webtales.fr'=>'Nicolas Trenti',
+        ));
+        
+        $message->setBcc(array(
             'julien.bourdin@webtales.fr' => 'Julien Bourdin'
         ));
         
