@@ -77,7 +77,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
         $message->setSubject('VOTRE INSCRIPTION A LA ZID 2013');
         $message->setFrom(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
         $message->setTo(array($email => $gender." ".$firstname." ".$name));
-        $message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
+        //$message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
 	
 		//Set body content
 		$msgContent = $this->view->render('paybox/confirm-cb.phtml');
@@ -100,7 +100,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
         $message->setSubject('VOTRE INSCRIPTION A LA ZID 2013');
         $message->setFrom(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
         $message->setTo(array($email => $gender." ".$firstname." ".$name));
-        $message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
+        //$message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
 	
 		//Set body content
 		$msgContent = $this->view->render('paybox/fail-cb.phtml');
@@ -123,7 +123,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
         $message->setSubject('VOTRE INSCRIPTION A LA ZID 2013');
         $message->setFrom(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
         $message->setTo(array($email => $gender." ".$firstname." ".$name));
-        $message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
+        //$message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
 	
 		//Set body content
 		$msgContent = $this->view->render('paybox/confirm-check.phtml');
