@@ -83,12 +83,12 @@ class Blocks_PayboxController extends Blocks_AbstractController
 		$message->setBcc(array('nicolas.trenti@webtales.fr' => 'Nicolas TRENTI'));
         //$message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
 	
-		//Set body content
-		$msgContent = $this->view->render('paybox/confirm-cb.phtml');
-
 		//Send the logo to the view
         $this->view->logo = $message->embed(Swift_Image::fromPath(APPLICATION_PATH.'/../public/templates/journees/images/logo_mail.png'));
         
+		//Set body content
+		$msgContent = $this->view->render('paybox/confirm-cb.phtml');
+		
 		//Set the body
         $message->setBody($msgContent, 'text/html');
         
@@ -110,11 +110,11 @@ class Blocks_PayboxController extends Blocks_AbstractController
 		$message->setBcc(array('nicolas.trenti@webtales.fr' => 'Nicolas TRENTI'));
         //$message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
 	
-		//Set body content
-		$msgContent = $this->view->render('paybox/fail-cb.phtml');
-
 		//Send the logo to the view
         $this->view->logo = $message->embed(Swift_Image::fromPath(APPLICATION_PATH.'/../public/templates/journees/images/logo_mail.png'));
+		
+		//Set body content
+		$msgContent = $this->view->render('paybox/fail-cb.phtml');
         
 		//Set the body
         $message->setBody($msgContent, 'text/html');
@@ -137,11 +137,11 @@ class Blocks_PayboxController extends Blocks_AbstractController
 		$message->setBcc(array('nicolas.trenti@webtales.fr' => 'Nicolas TRENTI'));
         //$message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
 	
-		//Set body content
-		$msgContent = $this->view->render('paybox/confirm-check.phtml');
-
 		//Send the logo to the view
         $this->view->logo = $message->embed(Swift_Image::fromPath(APPLICATION_PATH.'/../public/templates/journees/images/logo_mail.png'));
+	
+		//Set body content
+		$msgContent = $this->view->render('paybox/confirm-check.phtml');
         
 		//Set the body
         $message->setBody($msgContent, 'text/html');
