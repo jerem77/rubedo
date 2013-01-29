@@ -221,7 +221,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
                             'ref' => $ref
                         );
                         
-                        $this->_paybox->create($user);
+                        $result = $this->_paybox->create($user);
                         
                         $this->_session->set('payboxUser', $result['data']);
                         $this->_helper->redirector->gotoRoute(array(
