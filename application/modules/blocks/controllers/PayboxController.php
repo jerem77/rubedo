@@ -75,10 +75,10 @@ class Blocks_PayboxController extends Blocks_AbstractController
         
 		//Set header
         $message->setSubject('VOTRE INSCRIPTION A LA ZID 2013');
-		$message->setReplyTo(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
-		$message->setReturnPath('contact@zimmerdental.fr');
-        $message->setFrom(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
-		$message->setSender('contact@zimmerdental.fr');
+		$message->setReplyTo(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL Zimmer Dental'));
+		$message->setReturnPath('francoise.trupel@zimmer.com');
+        $message->setFrom(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL Zimmer Dental'));
+		$message->setSender('francoise.trupel@zimmer.com');
         $message->setTo(array($email => $gender." ".$firstname." ".$name));
         $message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
 	
@@ -101,10 +101,10 @@ class Blocks_PayboxController extends Blocks_AbstractController
         
 		//Set header
         $message->setSubject('VOTRE INSCRIPTION A LA ZID 2013');
-		$message->setReplyTo(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
-		$message->setReturnPath('contact@zimmerdental.fr');
-        $message->setFrom(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
-		$message->setSender('contact@zimmerdental.fr');
+		$message->setReplyTo(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL Zimmer Dental'));
+		$message->setReturnPath('francoise.trupel@zimmer.com');
+        $message->setFrom(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL Zimmer Dental'));
+		$message->setSender('francoise.trupel@zimmer.com');
         $message->setTo(array($email => $gender." ".$firstname." ".$name));
         $message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
 	
@@ -127,10 +127,10 @@ class Blocks_PayboxController extends Blocks_AbstractController
         
 		//Set header
         $message->setSubject('VOTRE INSCRIPTION A LA ZID 2013');
-		$message->setReplyTo(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
-		$message->setReturnPath('contact@zimmerdental.fr');
-        $message->setFrom(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
-		$message->setSender('contact@zimmerdental.fr');
+		$message->setReplyTo(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL Zimmer Dental'));
+		$message->setReturnPath('francoise.trupel@zimmer.com');
+        $message->setFrom(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL Zimmer Dental'));
+		$message->setSender('francoise.trupel@zimmer.com');
         $message->setTo(array($email => $gender." ".$firstname." ".$name));
         $message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
 	
