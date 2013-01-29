@@ -29,6 +29,114 @@ class Blocks_PayboxController extends Blocks_AbstractController
 
     protected $_session;
 
+	/**
+     * Get an instance of message
+     * 
+     * @return Swift_Message
+     */
+    protected function _getMailObject ()
+    {
+        return Swift_Message::newInstance();
+    }
+
+    /**
+     * Send the message
+     * 
+     * return number of destination message
+     * 
+     * @param Swift_Message $message
+     * @throws Zend_Controller_Exception
+     * @return number
+     */
+    protected function _sendMessage (Swift_Message $message)
+    {
+        if (! isset($this->_transport)) {
+            $options = Zend_Registry::get('swiftMail');
+            if (! isset($options['smtp'])) {
+                throw new Zend_Controller_Exception('no smtp in configuration');
+            }
+            $this->_transport = Swift_SmtpTransport::newInstance($options['smtp']['server'], $options['smtp']['port'], $options['smtp']['ssl'] ? 'ssl' : null);
+            if (isset($options['smtp']['username'])) {
+                $this->_transport->setUsername($options['smtp']['username'])->setPassword($options['smtp']['password']);
+            }
+        }
+        if (! isset($this->_mailer)) {
+            $this->_mailer = Swift_Mailer::newInstance($this->_transport);
+        }
+        
+        // Send the message
+        return $this->_mailer->send($message);
+    }
+	
+	protected function _sendConfirmationForCBPayment($gender, $name, $firstname, $email) {
+		$this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();	
+		$message = $this->_getMailObject();
+        
+		//Set header
+        $message->setSubject('VOTRE INSCRIPTION A LA ZID 2013');
+        $message->setFrom(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
+        $message->setTo(array($email => $gender." ".$firstname." ".$name));
+        $message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
+	
+		//Set body content
+		$msgContent = $this->view->render('paybox/confirm-cb.phtml');
+
+		//Send the logo to the view
+        $this->view->logo = $message->embed(Swift_Image::fromPath(APPLICATION_PATH.'/../public/templates/journees/images/logo_mail.png'));
+        
+		//Set the body
+        $message->setBody($msgContent, 'text/html');
+        
+        $this->_sendMessage($message);
+	}
+	
+	protected function _sendFailForCBPayment($gender, $name, $firstname, $email) {
+		$this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();	
+		$message = $this->_getMailObject();
+        
+		//Set header
+        $message->setSubject('VOTRE INSCRIPTION A LA ZID 2013');
+        $message->setFrom(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
+        $message->setTo(array($email => $gender." ".$firstname." ".$name));
+        $message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
+	
+		//Set body content
+		$msgContent = $this->view->render('paybox/fail-cb.phtml');
+
+		//Send the logo to the view
+        $this->view->logo = $message->embed(Swift_Image::fromPath(APPLICATION_PATH.'/../public/templates/journees/images/logo_mail.png'));
+        
+		//Set the body
+        $message->setBody($msgContent, 'text/html');
+        
+        $this->_sendMessage($message);
+	}
+	
+	protected function _sendConfirmationForCheckPayment($gender, $name, $firstname, $email) {
+		$this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();
+		$message = $this->_getMailObject();
+        
+		//Set header
+        $message->setSubject('VOTRE INSCRIPTION A LA ZID 2013');
+        $message->setFrom(array('contact@zimmerdental.fr' => 'Zimmer Dental'));
+        $message->setTo(array($email => $gender." ".$firstname." ".$name));
+        $message->setBcc(array('francoise.trupel@zimmer.com' => 'Françoise TRUPEL'));
+	
+		//Set body content
+		$msgContent = $this->view->render('paybox/confirm-check.phtml');
+
+		//Send the logo to the view
+        $this->view->logo = $message->embed(Swift_Image::fromPath(APPLICATION_PATH.'/../public/templates/journees/images/logo_mail.png'));
+        
+		//Set the body
+        $message->setBody($msgContent, 'text/html');
+        
+        $this->_sendMessage($message);
+	}
+
     public function init ()
     {
         $this->_paybox = Manager::getService('Paybox');
@@ -113,9 +221,8 @@ class Blocks_PayboxController extends Blocks_AbstractController
                             'ref' => $ref
                         );
                         
-                        $result = $this->_paybox->create($user);
+                        $this->_paybox->create($user);
                         
-                        // Control and backup, then if it's ok
                         $this->_session->set('payboxUser', $result['data']);
                         $this->_helper->redirector->gotoRoute(array(
                             'action' => 'payment'
@@ -140,7 +247,8 @@ class Blocks_PayboxController extends Blocks_AbstractController
                             'status' => 'paiement par chèque'
                         );
                         
-                        $result = $this->_paybox->create($user);
+                        $this->_paybox->create($user);
+						$this->_sendConfirmationForCheckPayment($gender, $name, $firstname, $email);
                         
                         $this->_helper->redirector->gotoRoute(array(
                             'action' => 'check'
@@ -308,6 +416,21 @@ class Blocks_PayboxController extends Blocks_AbstractController
         
         $this->view->url = $serverUrl;
     }
+	
+	 public function checkAction ()
+    {			
+        $controller = $this->getRequest()->getControllerName();
+        $module = $this->getRequest()->getModuleName();
+        
+        $serverUrl = $this->getRequest()->getScheme() . '://' . $this->getRequest()->getHttpHost();
+        $serverUrl .= $this->_helper->url->url(array(
+            'action' => 'index',
+            'controller' => $controller,
+            'module' => $module
+        ), null, true);
+        
+        $this->view->url = $serverUrl;
+    }
 
     public function backPaymentAction ()
     {
@@ -350,15 +473,19 @@ class Blocks_PayboxController extends Blocks_AbstractController
                             $user['status'] = 'payé';
                             
                             $this->_paybox->update($user);
+							$this->_sendConfirmationForCBPayment($user['gender'], $user['name'], $user['firstname'], $user['email']);
                         } else {
                             $user['status'] = 'url et signature differents';
                             $this->_paybox->update($user);
-                            
+							$this->_sendFailForCBPayment($user['gender'], $user['name'], $user['firstname'], $user['email']);
+                            $this->_session->set('payboxUSer', null);
+							
                             $this->getResponse()->setHttpResponseCode(400);
                         }
                     } else {
                         $user['status'] = 'le montant ne correspond pas';
                         $this->_paybox->update($user);
+						$this->_sendFailForCBPayment($user['gender'], $user['name'], $user['firstname'], $user['email']);
                         $this->_session->set('payboxUSer', null);
                         
                         $this->getResponse()->setHttpResponseCode(500);
@@ -366,6 +493,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
                 } else {
                     $user['status'] = 'erreur CGI (' . $params['erreur'] . ')';
                     $this->_paybox->update($user);
+					$this->_sendFailForCBPayment($user['gender'], $user['name'], $user['firstname'], $user['email']);
                     $this->_session->set('payboxUSer', null);
                     
                     $this->getResponse()->setHttpResponseCode(500);
@@ -373,6 +501,7 @@ class Blocks_PayboxController extends Blocks_AbstractController
             } else {
                 $user['status'] = 'parametres manquants dans la requete';
                 $this->_paybox->update($user);
+				$this->_sendFailForCBPayment($user['gender'], $user['name'], $user['firstname'], $user['email']);
                 $this->_session->set('payboxUSer', null);
                 
                 $this->getResponse()->setHttpResponseCode(405);
@@ -380,25 +509,11 @@ class Blocks_PayboxController extends Blocks_AbstractController
         } else {
             $user['status'] = 'utilisateur innexistant';
             $this->_paybox->update($user);
+			$this->_sendFailForCBPayment($user['gender'], $user['name'], $user['firstname'], $user['email']);
             $this->_session->set('payboxUSer', null);
             
             $this->getResponse()->setHttpResponseCode(500);
         }
-    }
-
-    public function checkAction ()
-    {
-        $controller = $this->getRequest()->getControllerName();
-        $module = $this->getRequest()->getModuleName();
-        
-        $serverUrl = $this->getRequest()->getScheme() . '://' . $this->getRequest()->getHttpHost();
-        $serverUrl .= $this->_helper->url->url(array(
-            'action' => 'index',
-            'controller' => $controller,
-            'module' => $module
-        ), null, true);
-        
-        $this->view->url = $serverUrl;
     }
 
     public function getCsvAction ()
@@ -511,86 +626,5 @@ class Blocks_PayboxController extends Blocks_AbstractController
         $content = file_get_contents($filePath);
         echo utf8_decode($content);
         die();
-    }
-
-    /**
-     * simple test action
-     */
-    public function testMailAction ()
-    {
-        $message = $this->_getMailObject();
-        
-        // Give the message a subject
-        $message->setSubject('Test de courriel accentué');
-        
-        // Set the From address with an associative array
-        $message->setFrom(array(
-            'contact@webtales.fr' => 'WebTales'
-        ));
-        
-        // Set the To addresses with an associative array
-        $message->setTo(array(
-            'mickael.goncalves@webtales.fr'=>'Mickaël Goncalves',
-            //'nicolas.trenti@webtales.fr'=>'Nicolas Trenti',
-        ));
-        
-        $message->setBcc(array(
-            'julien.bourdin@webtales.fr' => 'Julien Bourdin'
-        ));
-        
-        // Give it a body
-        //$message->setBody('test de message depuis le site journées');
-
-        
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender();
-        $this->view->message = $message;
-        
-        $msgContent = $this->view->render('paybox/test-mail.phtml');
-        
-        $message->setBody($msgContent, 'text/html');
-        
-        $result = $this->_sendMessage($message);
-        
-        Zend_Debug::dump($result);
-    }
-
-    /**
-     * Get an instance of message
-     * 
-     * @return Swift_Message
-     */
-    protected function _getMailObject ()
-    {
-        return Swift_Message::newInstance();
-    }
-
-    /**
-     * Send the message
-     * 
-     * return number of destination message
-     * 
-     * @param Swift_Message $message
-     * @throws Zend_Controller_Exception
-     * @return number
-     */
-    protected function _sendMessage (Swift_Message $message)
-    {
-        if (! isset($this->_transport)) {
-            $options = Zend_Registry::get('swiftMail');
-            if (! isset($options['smtp'])) {
-                throw new Zend_Controller_Exception('no smtp in configuration');
-            }
-            $this->_transport = Swift_SmtpTransport::newInstance($options['smtp']['server'], $options['smtp']['port'], $options['smtp']['ssl'] ? 'ssl' : null);
-            if (isset($options['smtp']['username'])) {
-                $this->_transport->setUsername($options['smtp']['username'])->setPassword($options['smtp']['password']);
-            }
-        }
-        if (! isset($this->_mailer)) {
-            $this->_mailer = Swift_Mailer::newInstance($this->_transport);
-        }
-        
-        // Send the message
-        return $this->_mailer->send($message);
     }
 }
