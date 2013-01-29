@@ -530,20 +530,23 @@ class Blocks_PayboxController extends Blocks_AbstractController
         
         // Set the To addresses with an associative array
         $message->setTo(array(
-            'julien.bourdin@webtales.fr',
-            'jbourdin@gmail.com' => 'Julien Bourdin'
+            //'mickael.goncalves@webtales.fr'=>'Mickaël Goncalves',
+            'julien.bourdin@webtales.fr' => 'Julien Bourdin'
         ));
         
         // Give it a body
-        $message->setBody('test de message depuis le site journées');
-        
-        // And optionally an alternative body
-        //$message->addPart('<q>Here is the message itself</q>', 'text/html');
-        
-        $result = $this->_sendMessage($message);
+        //$message->setBody('test de message depuis le site journées');
+
         
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
+        $this->view->message = $message;
+        
+        $msgContent = $this->view->render('paybox/test-mail.phtml');
+        
+        $message->setBody($msgContent, 'text/html');
+        
+        $result = $this->_sendMessage($message);
         
         Zend_Debug::dump($result);
     }
