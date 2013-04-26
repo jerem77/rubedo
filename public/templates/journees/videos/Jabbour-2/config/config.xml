@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+	<protocole>rtmp://</protocole>
+	<serveur>sd3181.sivit.org</serveur>
+	<application>/vod</application>
+	<instance>/Zimmer</instance>
+	<video>/Jabbour-2.flv</video>
+</configuration>
+
